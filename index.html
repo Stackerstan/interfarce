@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css">
+    <link href="bulma.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/simplestore-indexeddb@1.2.1/dist/simplestore.min.js"></script>
+    <script src="https://bitcoincore.tech/apps/bitcoinjs-ui/lib/bitcoinjs-lib.js"></script>
+    <script src="https://bundle.run/bip39@3.0.4"></script>
+    <script src="https://bundle.run/bip32@2.0.6"></script>
+    <script src="https://bundle.run/buffer@6.0.3"></script>
+    <script src="https://bundle.run/noble-secp256k1@1.2.14"></script>
+    <script src="https://bundle.run/browserify-cipher@1.0.1"></script>
+    <script src="elements.js"></script>
+    <script src="events.js"></script>
+    <script src="problems.js"></script>
+    <script src="protocol.js"></script>
+    <script src="patches.js"></script>
+    <script src="doki.js"></script>
+    <script src="renderId.js"></script>
+    <script src="diff_match_patch_uncompressed.js"></script>
+    <script src="showdown.min.js"></script>
+    <script src="home.js"></script>
+    <script src="account.js"></script>
+    <script src="samizdat.js"></script>
+    <script src="ushtree.js"></script>
+    <script src="profile.js"></script>
+    <script src="status.js"></script>
+    <script src="expenses.js"></script>
+    <script src="rankings.js"></script>
+    <script src="nostr.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css' />
+    <style type="text/css" >
+        body {
+            font-family : 'Ubuntu', sans-serif;
+        }
+    </style>
+    <script>
+        function computeRawPrivkey(node) {
+            return bitcoinjs.ECPair.fromPrivateKey(node.privateKey, {network: bitcoinjs.networks.mainnet});
+        }
+    </script>
+    <script>
+        function getPrivkeyHex(backupwords) {
+            var seed = bip39.mnemonicToSeedSync(backupwords);
+            var node = bip32.fromSeed(seed);
+            var npath = `m/44'/1237'/0'/0/0`
+            var child = node.derivePath(npath);
+            return computeRawPrivkey(child);
+        }
+    </script>
+    <script>
+        function toHexString(byteArray) {
+            return Array.from(byteArray, function (byte) {
+                return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+            }).join('');
+        }
+    </script>
+    <script>
+        var pubKey = ""
+        if ((localStorage.getItem('backupwords') === null) && (localStorage.getItem('privatekey') === null)){
+            localStorage.setItem('backupwords', bip39.generateMnemonic())
+        }
+        if (localStorage.getItem('backupwords') !== null) {
+            var privKey = getPrivkeyHex(localStorage.getItem('backupwords'));
+            privKey = privKey.__D.toString('hex');
+            localStorage.setItem('privatekey', privKey)
+        }
+        if (localStorage.getItem('privatekey') !== null) {
+            pubKey = nobleSecp256k1.getPublicKey(localStorage.getItem('privatekey'), true);
+        }
+
+        //be aware that not all valid bitcoin pubkeys are valid nostr pubkeys. Valid bitcoin pubkeys include uncompressed pubkeys (that start with 04), compressed pubkeys whose y coordinate is positive (that start with 02), and compressed pubkeys whose y coordinate is negative (that start with 03).
+        //Only the ones that start with 02 are valid for nostr, which then allows us to chop off the 02 when storing the pubkey.
+        //So if you change this code to generate random pubkeys, be sure to only use ones that have an 02 at the beginning.
+        //The pubkeyMinus2 variable is the pubkey created a moment ago but without the 02 at the beginning.
+        var pubKeyMinus2 = pubKey.substring(2);
+        pubkeydiv = document.createElement("div");
+        pubkeydiv.innerHTML = `You are currently using public key ` + pubKeyMinus2;
+
+    </script>
+</head>
+<body>
+<nav aria-label="main navigation" class="navbar is-active is-light" role="navigation">
+    <div class="navbar-brand">
+        <div class="navbar-item" >
+            <a href="#" onclick="renderHome()"><img src="head.png" /></a>
+        </div>
+
+    </div>
+
+    <div class="navbar-menu is-active" id="navbarBasicExample">
+        <div class="navbar-start">
+
+            <a class="navbar-item" onclick="displayUshTree()">
+                Identity Tree
+            </a>
+
+            <a class="navbar-item" onclick="displaySamizdat()">
+                Samizdatree
+            </a>
+
+            <a class="navbar-item" onclick="displayProtocol();">
+                Superprotocolo
+            </a>
+
+            <a class="navbar-item" onclick="displayProblemTracker()">
+                Problemo
+            </a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    More
+                </a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" onclick="displayStatus()">
+                        Mindmachine Status
+                    </a>
+                    <a class="navbar-item" onclick="displayPatches()">
+                        Patch Chain
+                    </a>
+                    <a class="navbar-item" onclick="displayDoki()">
+                        Doki
+                    </a>
+                    <a class="navbar-item" onclick="displayExpenses()">
+                        Expenses
+                    </a>
+                    <a class="navbar-item" onclick="displayRankings()">
+                        Nostranker
+                    </a>
+                    <a class="navbar-item" onclick="displayNostr()">
+                        WTF is Nostr?
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <a class="navbar-item" style="background-color: #FF9900; color: #ffffff" onclick="renderGettingStarted()">
+                Get Started
+            </a>
+            <a class="navbar-item" onclick="displayAccount()">
+                My Account
+            </a>
+
+            <div class="block" onclick="displayStatus()">
+                <p><span id="welay" class="block"></span></p>
+            <p><progress class="progress is-small is-primary block" id="welayconnection" style="width: 90%; height: 4px">15%</progress></p>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="content" id="maincontent">
+
+</div>
+
+<script>
+
+
+    function normalizeRelayURL(e) {
+        let [t, ...r] = e.trim().split("?");
+        return "http" === t.slice(0, 4) && (t = "ws" + t.slice(4)), "ws" !== t.slice(0, 2) && (t = "wss://" + t), t.length && "/" === t[t.length - 1] && (t = t.slice(0, -1)), [t, ...r].join("?")
+    }
+
+    var relay = "wss://mindmachine.688.org"
+    relay = normalizeRelayURL(relay);
+    document.getElementById("welay").innerText = relay
+    var socket = new WebSocket(relay);
+    var relaySocket = new WebSocket(normalizeRelayURL("wss://nostr.688.org"));
+
+
+    // function subscribe( pubkey ) {
+    //   var filter = {
+    //           "authors": [
+    //                   pubkey
+    //           ]
+    //   };
+    //   var subscription = [ "REQ", "my-sub", filter ];
+    //   subscription = JSON.stringify( subscription );
+    //   sessionStorage.subscription = subscription;
+    //   socket.send( sessionStorage.subscription );
+    // }
+    // function fetchSingleEvent(event) {
+    //     if (event !== undefined) {
+    //         var filter = {
+    //             "ids": [event],
+    //         };
+    //         subscription = ["REQ", event, filter];
+    //         subscription = JSON.stringify(subscription);
+    //         sessionStorage.subscription = subscription;
+    //         relaySocket.send(sessionStorage.subscription);
+    //         console.log("subscribed to event " + event)
+    //         relaySocket.addEventListener('message', function (received) {
+    //             let parsed = JSON.parse(received.data);
+    //             if (parsed[0] !== "EOSE") {
+    //                 if (parsed[2].id === event) {
+    //                     enMapReply(event, parsed[2])
+    //                 }
+    //             }
+    //
+    //         })
+    //         subscription = ["CLOSE", event];
+    //         subscription = JSON.stringify(subscription);
+    //         sessionStorage.subscription = subscription;
+    //         relaySocket.send(sessionStorage.subscription);
+    //     }
+    // }
+var eventsToSubscribe = []
+    function subscribeToComments(event) {
+        if (event !== undefined) {
+            eventsToSubscribe.push(event)
+            // eventsToSubscribe.forEach(function (item, index) {
+            //
+            // })
+            var filter = {
+                "#e": eventsToSubscribe
+            };
+            var subscription = ["REQ", "comments", filter];
+            subscription = JSON.stringify(subscription);
+            sessionStorage.subscription = subscription;
+            relaySocket.send(sessionStorage.subscription);
+            console.log(filter)
+            console.log(socket.readyState)
+        }
+    }
+
+    function subscribeprotocol() {
+
+        var filter = {
+            "#eventer": [
+                "protocol"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to protocol events")
+    }
+
+    function subscribesamizdat() {
+
+        var filter = {
+            "#eventer": [
+                "samizdat"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to samizdat events")
+    }
+
+    function subscribeidentity() {
+
+        var filter = {
+            "#eventer": [
+                "identity"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to identity events")
+    }
+
+    function subscribepatches() {
+
+        var filter = {
+            "#eventer": [
+                "patches"
+            ]
+        };
+        var subscription = ["REQ", "patches", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to patch events")
+    }
+
+    function subscribedoki() {
+
+        var filter = {
+            "#eventer": [
+                "doki"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to doki events")
+    }
+
+    function subscribeCurrentstate() {
+
+        var filter = {
+            "#eventer": [
+                "currentstate"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to mindstate events")
+    }
+
+    function fetchMindmachineTip() {
+
+        var filter = {
+            "#eventer": [
+                "mindmachineTip"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to mindmachine events")
+    }
+
+    function subscribeproblems() {
+
+        var filter = {
+            "#eventer": [
+                "problems"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to problem events")
+    }
+
+
+    socket.addEventListener('open', function () {
+        socketConnected = true
+        subscribeToEverything()
+    });
+    relaySocket.addEventListener('open', function () {
+        relaySocketConnected = true
+    });
+socketConnected = false
+relaySocketConnected = false
+subscribed = false
+    function subscribeToEverything() {
+    if (socketConnected && !subscribed) { //if (socketConnected && relaySocketConnected && !subscribed) {
+        subscribed = true
+        document.getElementById("welayconnection").value = 100
+        subscribedoki()
+        subscribesamizdat()
+        subscribeprotocol()
+        subscribeproblems()
+        subscribepatches()
+        subscribeCurrentstate()
+        detect_id()
+        subscribeidentity()
+    }
+    }
+
+    // Listen for messages
+    socket.addEventListener('message', function (e) {
+
+        //console.log(e.data)
+        var event = JSON.parse(e.data);
+        //console.log(event[2])
+        if (event[2].kind === 640499) {
+            enMapIdentityObject(event[2])
+        }
+        if (event[2].kind === 641097) {
+            enMapPatch(event[2])
+        }
+        if (event[2].kind === 649999) {
+            j = JSON.parse(event[2].content)
+            console.log(j)
+            currentStatus = j
+            statusready = true
+        }
+        if (event[2].kind === 641099) {
+            downloadLatest(event[2].content)
+        } else {
+            switch (event[2].kind) {
+                case 640699:
+                    enMapProtocolObject(event[2])
+                    break;
+                case 640899:
+                    enMapProblemObject(event[2])
+                    break;
+                case 641299:
+                    enMapDokiObject(event[2])
+                    break;
+                case 1:
+                    event[2].tags.forEach(function (tagArray) {
+                        if (tagArray[0] === "e") {
+                            if (tagArray[1] === rootSamizdatId) {
+                                enMapSamizdat(event[2])
+                            }
+                        }
+                    })
+                    if (event[2].id === rootSamizdatId) {
+                        enMapSamizdat(event[2])
+                    }
+                    break;
+                case 641297:
+                    dokiReady = true
+                    break;
+                case 640697:
+                    protocolReady = true
+                    break;
+                case 640897:
+                    problemsReady = true
+                    break;
+                case 641497:
+                    samizdatReady = true
+                    break;
+            }
+        }
+    });
+
+
+    // Listen for messages
+    // relaySocket.addEventListener('message', function (e) {
+    //
+    //     var event = JSON.parse(e.data);
+    //     if (event[0] !== "EOSE") {
+    //         if (event[2].kind === 1) {
+    //             //console.log(event[2])
+    //             //document.body.innerHTML += event[ 2 ].content + " (sent publicly by " + event[ 2 ].pubkey + ")<br><br>";
+    //         } else if (event[2].kind === 126) {
+    //             // div = document.createElement("div")//createTextNode(`<div class="box">`+ event[ 2 ].content + `</div>`)
+    //             // div.innerHTML = `<div class="box">` + `<span class="tag is-primary">`+ event[ 2 ].tags[0][1]+ `</span>` + event[ 2 ].content + `</div>`;
+    //             event[2].tags.forEach(function (tags) {
+    //                 if (tags[0] === "mind") {
+    //                     switch (tags[1]) {
+    //                         case "protocol":
+    //                             enMapProtocolObject(event[2])
+    //                             break
+    //                         case "problems":
+    //                             enMapProblemObject(event[2])
+    //                     }
+    //                 }
+    //             })
+    //         }
+    //     }
+    // });
+
+</script>
+<script>
+
+    function makeNote(note, etag) {
+        e = makeEvent(note, etag, 1)
+        signHash(e.id).then(
+            function (result) {
+                e.sig = result
+                sendIt(e)
+            },
+            function (error) {
+                console.log(error)
+            })
+    }
+
+    function sendIt(signedEvent) {
+        var sendable = ["EVENT", signedEvent];
+        sessionStorage.sendable = JSON.stringify(sendable);
+        socket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
+    }
+
+    function makeEvent(note, etag, kind) {
+        var now = Math.floor((new Date().getTime()) / 1000);
+        tags = []
+        if (etag !== undefined) {
+            if (etag.length > 0) {
+                if (typeof etag === 'string') {
+                    tags.push(["e", etag])
+                }
+                if (Array.isArray(etag)) {
+                    tags.push(["e", ...etag])
+                }
+            }
+        }
+       // if (kind !== 1) {
+            if (identityObjects.get(pubKeyMinus2) !== undefined) {
+
+                sequence = identityObjects.get(pubKeyMinus2).GlobalSequence + 1
+                tags.push(["sequence", sequence.toString()])
+            } else {
+
+                sequence = 1
+                tags.push(["sequence", sequence.toString()])
+            }
+        //}
+        tags.push(["height", currentStatus.Height.toString()])
+        k = 1
+        if (kind !== undefined) {
+            k = kind
+        }
+        var newevent = [
+            0,
+            pubKeyMinus2,
+            now,
+            k,
+            tags,
+            note
+        ];
+        var message = JSON.stringify(newevent);
+        var msghash = bitcoinjs.crypto.sha256(message).toString('hex');
+        return {
+            "id": msghash,
+            "pubkey": pubKeyMinus2,
+            "created_at": now,
+            "kind": k,
+            "tags": tags,
+            "content": note,
+        }
+    }
+
+    function signHash(hash) {
+        return nobleSecp256k1.schnorr.sign(hash, privKey)
+    }
+
+
+
+</script>
+
+<div  id="infomodal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title" id="modal-heading">Modal title</p>
+            <button class="delete" aria-label="close" onclick="document.getElementById('infomodal').classList.remove('is-active')"></button>
+        </header>
+        <section class="modal-card-body" id="modal-body">
+        </section>
+    </div>
+</div>
+
+
+</body>
+</html>
