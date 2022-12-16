@@ -140,9 +140,9 @@ function displayPatchTools() {
     fetchButton = document.createElement("button")
     fetchButton.innerText = "Fetch latest Mindmachine tip"
     fetchButton.onclick = function () {
-        fetchMindmachineTip()
+        //fetchMindmachineTip()
     }
-    fetchButton.className = "button is-link"
+    fetchButton.className = "button is-static"
     div.appendChild(fetchButton)
 
 
