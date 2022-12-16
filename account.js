@@ -45,10 +45,10 @@ function renderAccountDetails() {
     if (typeof ident === "undefined") {
         ident = {Account: pubKeyMinus2, Name: "", About: "", UshBy: ""}
     }
-    deets.appendChild(createElement("Help", "A new account and corrosponding seed words are generated when you first load this page. \nTo generate a new account, clear your browser's data for this site and reload it.\nIf you start using this account, you should write down your seed words (especially if you claim a Permanym that you want to keep)."))
+    deets.appendChild(createElement("Help", "A new account and corrosponding seed words are generated when you first load this page. \nTo generate a new account, clear your browser's data for this site and reload it.\nIf you start using this account, you should write down your seed words (especially if you claim a Username that you want to keep)."))
     deets.appendChild(createElement("Account", ident.Account))
     deets.appendChild(createElement("Seed Words - write these down if you want to continue using this Account.", localStorage.getItem('backupwords')))
-    deets.appendChild(createElement("Permanym (permanent psudonym)", ident.Name))
+    deets.appendChild(createElement("Username (permanent psudonym)", ident.Name))
     deets.appendChild(createElement("About", ident.About))
     var ushby;
     if (ident.UshBy.length > 0) {
@@ -97,9 +97,9 @@ function recoverSeed() {
 Adding your seed words or private key here will replace the current keypair in your browser's LocalStorage for this site.
 <br /><br />
 <h4 class="is-4">Note for existing Nostr users</h4>
-Instead of importing your existing Nostr seed words or private key, you can simply register your <b>existing Nostr <i>username</i></b> as a Permanym for the pubkey ("Account") that you're currently signed in with (it was auto-generated when you first loaded this page). <b>Record your seed words</b> if you do this.
+Instead of importing your existing Nostr seed words or private key, you can simply register your <b>existing Nostr <i>username</i></b> as a Username for the pubkey you're currently signed in with (it was auto-generated when you first loaded this page). Don't forget to <b>Record your seed words</b>.
 <br /><br />
-You can then provide a proof (event signed with alby or nos2x AND your existing Stackerstan pubkey) to <b>add your Nostr pubkey to this Account</b>. Events from <b>both</b> pubkeys are then <b>valid for your Stackerstan Account</b> (not implemented yet but probably coming soon).
+You can then provide a proof (event signed with alby or nos2x AND your existing Stackerstan pubkey) to <b>add your Nostr pubkey to this Account</b>. Events from <b>both</b> pubkeys are then <b>valid for your Stackerstan Account</b> (not implemented, maybe coming soon?).
 </div>
 <div class="field">
   <label class="label">Seed Words OR Private Key</label>
@@ -138,12 +138,12 @@ function updateAccountDetails() {
 <div class="content">
 See "Non-fungible Identity" in the Stackerstan Superprotocolo.
 <br /><br />
-A Permanym is a handle or username that cannot be changed once it has been set for your Pubkey. It MUST be unique within Stackerstan.
+Usernames cannot be changed once set for your Pubkey. It MUST be unique within Stackerstan.
 <br /><br />
-The Superprotocolo requires a minimum Levenshtein distance between any new Permanym and all existing Permanyms, but this is not implemented yet. 
+The Superprotocolo requires a minimum Levenshtein distance between any new Username and all existing Usernames, but this is not implemented yet. 
 </div>
     <div class="field">
-  <label class="label">Permanym</label>
+  <label class="label">Username</label>
   <div class="control">
     <input class="input" type="text" placeholder="Name or Pseudonym" id="name input" maxlength="20">
   </div>

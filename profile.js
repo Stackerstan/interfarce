@@ -53,8 +53,8 @@ function maintainerButton(Account) {
     btn = document.createElement("button")
     btn.innerText = "Promote to Maintainer"
     btn.onclick = function () {
-        if (myIdentity().MaintainerBy.length === 0) {
-            alert("You must be a Maintainer to promote others")
+        if (!accountIsInMaintainerTree(pubKeyMinus2)) {
+            alert("You must be in the Maintainer Tree to do this")
         } else {
             sendNewMaintainer(Account)
         }
@@ -88,8 +88,8 @@ function validateUSHButton(Account) {
     btn = document.createElement("button")
     btn.innerText = "Add to Identity Tree"
     btn.onclick = function () {
-        if (myIdentity().UshBy.length === 0) {
-            alert("You must be in the Identity Tree before you can add others to it")
+        if (!accountIsInIdentityTree(pubKeyMinus2)) {
+            alert("You must be in the Identity Tree to add new people")
         } else {
             sendNewUshValidation(Account)
         }
@@ -119,11 +119,32 @@ function sendNewUshValidation(targetAccount) {
     )
 }
 
+function accountIsInIdentityTree(account) {
+    ident = identityObjects.get(account)
+    if (ident !== undefined) {
+        if (ident.UshBy.length > 0) {
+            return true
+        }
+    }
+    return false
+}
+
+function accountIsInMaintainerTree(account) {
+    ident = identityObjects.get(account)
+    if (ident !== undefined) {
+        if (ident.MaintainerBy.length > 0) {
+            return true
+        }
+    }
+    return false
+}
+
 function myIdentity() {
    ident = identityObjects.get(pubKeyMinus2)
     if (ident !== undefined) {
         return ident
     } else {
         console.log("the account " + pubKeyMinus2 + " has not been registered in the Mindmachine state.")
+        return false
     }
 }

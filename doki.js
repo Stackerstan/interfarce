@@ -64,6 +64,11 @@ function renderEditDoki(id) {
     ta.style.width = "100%"
     saz = dokiObjects.get(id)
     ta.textContent = saz.CurrentTip
+    ta.onfocus = function () {
+        if (!accountIsInIdentityTree(pubKeyMinus2)) {
+            alert("You must be in the Identity Tree to submit changes")
+        }
+    }
     ta.onkeyup = function () {
         var dmp = new diff_match_patch()
         d = dmp.diff_main(saz.CurrentTip, ta.value)
@@ -159,7 +164,11 @@ function renderOneDoki(id) {
                     mrg = document.createElement("button")
                     mrg.innerText = "Merge"
                     mrg.onclick = function () {
-                        makeAndSendKind641204(id, patch.EventID, 2, saz.Sequence, "")
+                        if (!accountIsInMaintainerTree(pubKeyMinus2)) {
+                            alert("You must be in the Maintainer Tree to merge changes")
+                        } else {
+                            makeAndSendKind641204(id, patch.EventID, 2, saz.Sequence, "")
+                        }
                         //console.log(saz)
                     }
                     mrg.className = "button is-primary"
@@ -220,16 +229,49 @@ async function createNewPatch(document_id, patch, problem) {
 }
 
 async function createNewDocument(goal_or_problem) {
-    content = JSON.stringify({
-        goal_or_problem: goal_or_problem
-    })
-    p = makeEvent(content, "", 641200)
-    signHash(p.id).then(
-        function (result) {
-            p.sig = result
-            sendIt(p)
-            console.log(p)
-            location.reload()
+    if (!accountIsInIdentityTree(pubKeyMinus2)) {
+        alert("You must be in the Identity Tree to do that")
+    } else {
+        content = JSON.stringify({
+            goal_or_problem: goal_or_problem
+        })
+        p = makeEvent(content, "", 641200)
+        signHash(p.id).then(
+            function (result) {
+                p.sig = result
+                sendIt(p)
+                console.log(p)
+                location.reload()
+            }
+        )
+    }
+}
+
+
+function dokiInABubble(doki) {
+        saz = dokiObjects.get(doki)
+        if (saz !== undefined) {
+            md = new showdown.Converter({
+                extensions: [...bindings]
+            })
+            ht = md.makeHtml(saz.CurrentTip)
+            mdht = document.createElement("div")
+            mdht.innerHTML = ht
+            mdht.className = "content"
+            edit = document.createElement("button")
+            edit.className = "button is-link"
+            edit.innerText = "Edit this"
+            edit.onclick = function () {
+                if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                    alert("You must be in the Identity Tree to submit edits")
+                }
+                setURLID("doki_id", doki)
+            }
+            box = document.createElement("div")
+            box.className = "notification is-primary"
+            box.appendChild(mdht)
+            box.appendChild(edit)
+            return box
         }
-    )
+        return
 }

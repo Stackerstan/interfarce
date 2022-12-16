@@ -39,7 +39,7 @@ function replybox(id) {
             makeNote(textbox.value, id)
             textbox.value = ""
         } else {
-            alert("You MUST have a Permanym for your comment to show up here. Go to the My Account page.")
+            alert("Go to the My Account page and create a username first")
         }
     }
     div.appendChild(textbox)

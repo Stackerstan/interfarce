@@ -48,6 +48,9 @@ function helpButton(doki) {
             edit.className = "button is-link"
             edit.innerText = "Edit this"
             edit.onclick = function () {
+                if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                    alert("You must be in the Identity Tree to submit edits")
+                }
                 setURLID("doki_id", doki)
             }
             document.getElementById("modal-body").appendChild(edit)
@@ -138,8 +141,8 @@ function oneSamizdat(event) {
     reply.onclick = function () {
         b = document.getElementById( 'replyform' )
         if (b !== null) {b.remove()}
-        if (!(ident.Name.length > 0)) {
-            alert("You SHOULD register a Permanym before commenting here.")
+        if (!hasPermanym(pubKeyMinus2)) {
+            alert("You should really create a username before commenting here")
         }
         item = document.getElementById(event.id + "reply")//append(newSamizdatForm(event.id, event.content))//appendChild(newSamizdatForm(event.id, event.content))
         item.appendChild(newSamizdatForm(event.id, event.content))

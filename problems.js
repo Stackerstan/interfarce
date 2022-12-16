@@ -11,12 +11,31 @@ function waitForProblemsReady(callback) {
 function displayProblemTracker() {
     document.getElementById("maincontent").replaceChildren(prepWindow())
     document.getElementById("heading").innerText = "Problem Tracker"
-    document.getElementById("content").replaceChildren(loadingSign())
+    document.getElementById("content").replaceChildren(dokiInABubble("70dcc8dc346bf8d7c246b54d7baa1ecc6a087448c58947a2f5a1df7bd27bf761"), loadingSign())
     waitForProblemsReady(function () {
-        document.getElementById("content").replaceChildren(renderProblems())
+        document.getElementById("content").replaceChildren(dokiInABubble("70dcc8dc346bf8d7c246b54d7baa1ecc6a087448c58947a2f5a1df7bd27bf761"), renderProblems())
     })
     document.getElementById("details").replaceChildren()
     rewriteURL("problems")
+}
+
+function gitstuff() {
+    h = document.createElement("h5")
+    h.className = "is-5"
+    h.innerText = "This problem tracker is pretty crap"
+    let p = "It will probably get better, but for now:\n\n"
+    md = new showdown.Converter({
+        extensions: [...bindings]
+    })
+    ht2 = md.makeHtml(p)
+    mdht2 = document.createElement("div")
+    mdht2.innerHTML = ht2
+    mdht2.className = "content"
+    box = document.createElement("div")
+    box.className = "notification is-primary"
+    box.appendChild(h)
+    box.appendChild(mdht2)
+    return box
 }
 
 function renderProblems() {
@@ -187,24 +206,33 @@ function showDetails(event) {
         claim_btn.innerText = "Claim this problem"
         claim_btn.className = "button is-primary"
         claim_btn.onclick = function () {
-            seq = Number(getSequence(event))
-            seq++
-            content = JSON.stringify({"target": event.mindmachineUID, "claim": true, "sequence": seq})
-            claim_event = makeEvent(content, event.mindmachineUID, 640802)
-            signHash(claim_event.id).then(
-                function (result) {
-                    claim_event.sig = result
-                    sendIt(claim_event)
-                    console.log(claim_event)
-                    location.reload()
-                }
-            )
+            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                alert("You must be in the Identity Tree to do that")
+            } else {
+                seq = Number(getSequence(event))
+                seq++
+                content = JSON.stringify({"target": event.mindmachineUID, "claim": true, "sequence": seq})
+                claim_event = makeEvent(content, event.mindmachineUID, 640802)
+                signHash(claim_event.id).then(
+                    function (result) {
+                        claim_event.sig = result
+                        sendIt(claim_event)
+                        console.log(claim_event)
+                        location.reload()
+                    }
+                )
+            }
+
         }
         claim_div.appendChild(claim_btn)
         newProblem = document.createElement("button")
         newProblem.className = "button is-link"
         newProblem.onclick = function () {
-            document.getElementById("details").appendChild(newProblemForm(event.mindmachineUID))
+            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                alert("You must be in the Identity Tree to do that")
+            } else {
+                document.getElementById("details").appendChild(newProblemForm(event.mindmachineUID))
+            }
         }
         newProblem.innerText = "Create child problem"
         //document.getElementById("details").appendChild(newProblem)
@@ -213,7 +241,11 @@ function showDetails(event) {
         editProblem = document.createElement("button")
         editProblem.className = "button is-link"
         editProblem.onclick = function () {
-            document.getElementById("details").appendChild(editProblemForm(event))
+            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                alert("You must be in the Identity Tree to do that")
+            } else {
+                document.getElementById("details").appendChild(editProblemForm(event))
+            }
         }
         editProblem.innerText = "Edit Problem"
         claim_div.appendChild(editProblem)
@@ -226,6 +258,9 @@ function showDetails(event) {
         newProtocol = document.createElement("button")
         newProtocol.className = "button is-link"
         newProtocol.onclick = function () {
+            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                alert("You must be in the Identity Tree to do that")
+            }
             document.getElementById("details").appendChild(newProtocolForm(event.mindmachineUID))
         }
         newProtocol.innerText = "Create child protocol item"
