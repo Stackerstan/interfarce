@@ -31,6 +31,7 @@
     <script src="rankings.js"></script>
     <script src="nostr.js"></script>
     <script src="dividends.js"></script>
+    <script src="connecting.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css' />
     <style type="text/css" >
         body {
@@ -165,11 +166,11 @@
     </div>
 </nav>
 <div class="content" id="maincontent">
-
+<div class="content" id="connecting"></div>
 </div>
 
 <script>
-
+displayWhileConnecting()
 
     function normalizeRelayURL(e) {
         let [t, ...r] = e.trim().split("?");
