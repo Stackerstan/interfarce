@@ -1,7 +1,7 @@
 ---
 name: Problem statement
-about: To guide people into logging issues correctly
-title: 'Problem: a one line description of the problem you have observed'
+about: Please follow this simple guide to log an issue
+title: 'Problem: a one line description of the problem you face or have observed'
 labels: ''
 assignees: ''
 
@@ -15,4 +15,10 @@ There are no bug reports, bugs are just problems to solve.
 
 There are no feature requests, features are solutions to problems.
 
-The title of your problem should start with "Problem:"
+Please describe the problem as accurately as possible. For example: 
+"Problem: the interface hurts my eyes because it's very bright and I'm a reptillian"
+
+You are also welcome to propose a solution:
+"Possible solution: create a dark theme"
+
+To show that you understand, please make the title of your new issues start with "Problem:"
