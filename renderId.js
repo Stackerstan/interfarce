@@ -9,12 +9,37 @@ function detect_id() {
     if (onloadLocation.hash !== undefined) {
         switch (onloadLocation.hash){
             case "#status":
-                
                 displayStatus()
                 return;
             case "#protocol":
-                
                 displayProtocol()
+                return;
+            case "#problems":
+                displayProblemTracker()
+                return;
+            case "#nostr":
+                displayNostr()
+                return;
+            case "#identity_tree":
+                displayUshTree()
+                return;
+            case "#samizdat":
+                displaySamizdat()
+                return;
+            case "#patches":
+                displayPatches()
+                return;
+            case "#doki":
+                displayDoki()
+                return;
+            case "#expenses":
+                displayExpenses()
+                return;
+            case "#dividends":
+                displayDividends()
+                return;
+            case "#nostranker":
+                displayRankings()
                 return;
         }
     }
@@ -74,6 +99,7 @@ function prepWindow(kind) {
 }
 
 function rewriteURL(page) {
+    //setURLID(page, "")
     loc = window.location.href
     loc = loc.split("index.html")
     console.log(loc)
@@ -94,5 +120,9 @@ function setURLID(type, id) {
             break;
         case "profile_id":
             displaySingleProfile(id)
+            break;
+        // case "nostr":
+        //     displayNostr()
+        //     break;
     }
 }

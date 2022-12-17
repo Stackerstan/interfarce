@@ -15,7 +15,7 @@ function displayPatches() {
     })
     //document.getElementById("content").replaceChildren(renderProtocolObjects(document.getElementById("content").clientWidth))
     document.getElementById("details").replaceChildren(howTo(), displayPatchTools(), newRepoForm())
-    rewriteURL("protocol")
+    rewriteURL("patches")
 }
 
 function howTo() {

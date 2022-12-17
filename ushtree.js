@@ -1,10 +1,13 @@
 function displayUshTree() {
-    document.getElementById("maincontent").replaceChildren(prepWindow())
-    document.getElementById("heading").innerText = "Identity Tree: Cheapest Sybil Attack Mitigation, Ever."
-    document.getElementById("heading").appendChild(spacer())
-    document.getElementById("heading").appendChild(helpButton("2a60437d8637d0d3f18ded4a5435ae47794c047c2968d0b29903aafc93dc4b66"))
-    document.getElementById("details").replaceChildren(unverifiedHeader(), dokiInABubble("6a2205445c6c24f35b353f3662fc8baaa937067ba94cb3d1c854e6aa4a0df516"), getUnverified())
-    renderUshTree()
+    waitForDokiReady(function () {
+        document.getElementById("maincontent").replaceChildren(prepWindow())
+        document.getElementById("heading").innerText = "Identity Tree: Cheapest Sybil Attack Mitigation, Ever."
+        document.getElementById("heading").appendChild(spacer())
+        document.getElementById("heading").appendChild(helpButton("2a60437d8637d0d3f18ded4a5435ae47794c047c2968d0b29903aafc93dc4b66"))
+        document.getElementById("details").replaceChildren(unverifiedHeader(), dokiInABubble("6a2205445c6c24f35b353f3662fc8baaa937067ba94cb3d1c854e6aa4a0df516"), getUnverified())
+        renderUshTree()
+        rewriteURL("identity_tree")
+    })
 }
 
 function unverifiedHeader() {

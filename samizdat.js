@@ -20,7 +20,7 @@ function displaySamizdat() {
     waitForSamizdatReady(function () {
         renderSamizdat()
     })
-
+    rewriteURL("samizdat")
 }
 
 function spacer() {
