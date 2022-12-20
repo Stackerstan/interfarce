@@ -13,9 +13,9 @@ Simply edit index.html and replace `wss://mindmachine.688.org` with `ws://127.0.
 0. Have a Stackerstan account and be in the Identity Tree if you want to claim an expense for your Patch.
 1. Fork this github repository under your own github account.
 2. Clone _your_ fork locally on your development machine.
-3. Choose _one_ problem to solve (it SHOULD exist on the Stackerstan problem tracker in addition to Github). If you aren't solving a problem that's already in the issue tracker you should describe the problem there (and your idea of the solution) first to see if anyone else has something to say about it (maybe someone is already working on a solution, or maybe you're doing something wrong).
+3. Choose _one_ problem to solve (it SHOULD exist on the Stackerstan problem tracker in addition to Github). If you aren't solving a problem that's already in the issue tracker you should describe the problem (and your idea of the solution) first to see if anyone else has something to say about it (maybe someone is already working on a solution, or maybe you're doing something wrong).
 
-**It is important to claim the issue you want to work on so that others don't work on the same thing. Do this using the Interfarce either locally or at stackerstan.org**
+**It is important to claim the issue you want to work on so that others don't work on the same thing. Comment on the Github issue to let others know you are going to work on it**
 
 4. Add this repository as an upstream source and pull any changes:
 ```
