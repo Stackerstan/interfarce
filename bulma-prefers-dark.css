@@ -1,7 +1,7 @@
 /*! Bulma Prefers Dark  | MIT License | github.com/jloh/bulma-prefers-dark */
 @media (prefers-color-scheme: dark) {
   html {
-    background-color: #17181c;
+    background-color: #1a1c24;
   }
   body {
     color: #b5b5b5;
@@ -174,7 +174,7 @@
     background-color: #fafafa !important;
   }
   .box {
-    background-color: #0a0a0a;
+    background-color: #2f2e2e;
     box-shadow: 0 2px 3px rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1);
     color: #b5b5b5;
   }
