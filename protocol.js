@@ -65,10 +65,10 @@ function renderProtocolItem(item) {
     //todo change colours based on status (closed, claimed, open)
     article.className = "box" //"message is-dark"// + getProtocolColour(item);
     article.onmouseover = function () {
-        article.style.backgroundColor = "hsl(48, 100%, 67%)"
+        article.style.backgroundColor = "#1c1c1c"
     }
     article.onmouseleave = function () {
-        article.style.backgroundColor = "#ffffff"
+        article.style.backgroundColor = "#2f2e2e"
     }
     tag = document.createElement("span")
     tag.className = "tag " + getProtocolColour(item)
