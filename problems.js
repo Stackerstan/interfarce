@@ -150,6 +150,9 @@ function renderProblem(item) {
     let article = document.createElement("article");
     //todo change colours based on status (closed, claimed, open)
     article.className = "message is-dark";
+    article.style.borderColor = "#ffffff"
+    article.style.borderStyle = "solid"
+    article.style.borderWidth = "1px"
     content = item.content
     // split = content.split(/\r?\n/);
     // heading = split.shift()
