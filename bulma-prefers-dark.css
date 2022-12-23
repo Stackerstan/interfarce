@@ -2976,262 +2976,262 @@
     background-color: #ff3860;
     color: #fff;
   }
-  .progress::-webkit-progress-bar {
-    background-color: #363636;
-  }
-  .progress::-webkit-progress-value {
-    background-color: #b5b5b5;
-  }
-  .progress::-moz-progress-bar {
-    background-color: #b5b5b5;
-  }
-  .progress::-ms-fill {
-    background-color: #b5b5b5;
-  }
-  .progress:indeterminate {
-    background-color: #363636;
-    background-image: linear-gradient(to right, #4a4a4a 30%, #363636 30%);
-  }
-  .progress.is-white::-webkit-progress-value {
-    background-color: #e6e6e6;
-  }
-  .progress.is-white::-moz-progress-bar {
-    background-color: #e6e6e6;
-  }
-  .progress.is-white::-ms-fill {
-    background-color: #e6e6e6;
-  }
-  .progress.is-white:indeterminate {
-    background-image: linear-gradient(to right, #e6e6e6 30%, #363636 30%);
-  }
-  .progress.is-black::-webkit-progress-value {
-    background-color: black;
-  }
-  .progress.is-black::-moz-progress-bar {
-    background-color: black;
-  }
-  .progress.is-black::-ms-fill {
-    background-color: black;
-  }
-  .progress.is-black:indeterminate {
-    background-image: linear-gradient(to right, black 30%, #363636 30%);
-  }
-  .progress.is-light::-webkit-progress-value {
-    background-color: #dbdbdb;
-  }
-  .progress.is-light::-moz-progress-bar {
-    background-color: #dbdbdb;
-  }
-  .progress.is-light::-ms-fill {
-    background-color: #dbdbdb;
-  }
-  .progress.is-light:indeterminate {
-    background-image: linear-gradient(to right, #dbdbdb 30%, #363636 30%);
-  }
-  .progress.is-dark::-webkit-progress-value {
-    background-color: #1c1c1c;
-  }
-  .progress.is-dark::-moz-progress-bar {
-    background-color: #1c1c1c;
-  }
-  .progress.is-dark::-ms-fill {
-    background-color: #1c1c1c;
-  }
-  .progress.is-dark:indeterminate {
-    background-image: linear-gradient(to right, #1c1c1c 30%, #363636 30%);
-  }
-  .progress.is-primary::-webkit-progress-value {
-    background-color: #009e86;
-  }
-  .progress.is-primary::-moz-progress-bar {
-    background-color: #009e86;
-  }
-  .progress.is-primary::-ms-fill {
-    background-color: #009e86;
-  }
-  .progress.is-primary:indeterminate {
-    background-image: linear-gradient(to right, #009e86 30%, #363636 30%);
-  }
-  .progress.is-link::-webkit-progress-value {
-    background-color: #205bbc;
-  }
-  .progress.is-link::-moz-progress-bar {
-    background-color: #205bbc;
-  }
-  .progress.is-link::-ms-fill {
-    background-color: #205bbc;
-  }
-  .progress.is-link:indeterminate {
-    background-image: linear-gradient(to right, #205bbc 30%, #363636 30%);
-  }
-  .progress.is-info::-webkit-progress-value {
-    background-color: #0f81cc;
-  }
-  .progress.is-info::-moz-progress-bar {
-    background-color: #0f81cc;
-  }
-  .progress.is-info::-ms-fill {
-    background-color: #0f81cc;
-  }
-  .progress.is-info:indeterminate {
-    background-image: linear-gradient(to right, #0f81cc 30%, #363636 30%);
-  }
-  .progress.is-success::-webkit-progress-value {
-    background-color: #1ca64c;
-  }
-  .progress.is-success::-moz-progress-bar {
-    background-color: #1ca64c;
-  }
-  .progress.is-success::-ms-fill {
-    background-color: #1ca64c;
-  }
-  .progress.is-success:indeterminate {
-    background-image: linear-gradient(to right, #1ca64c 30%, #363636 30%);
-  }
-  .progress.is-warning::-webkit-progress-value {
-    background-color: #ffd324;
-  }
-  .progress.is-warning::-moz-progress-bar {
-    background-color: #ffd324;
-  }
-  .progress.is-warning::-ms-fill {
-    background-color: #ffd324;
-  }
-  .progress.is-warning:indeterminate {
-    background-image: linear-gradient(to right, #ffd324 30%, #363636 30%);
-  }
-  .progress.is-danger::-webkit-progress-value {
-    background-color: #ff0537;
-  }
-  .progress.is-danger::-moz-progress-bar {
-    background-color: #ff0537;
-  }
-  .progress.is-danger::-ms-fill {
-    background-color: #ff0537;
-  }
-  .progress.is-danger:indeterminate {
-    background-image: linear-gradient(to right, #ff0537 30%, #363636 30%);
-  }
-  .progress.is-white-dark::-webkit-progress-value {
-    background-color: white;
-  }
-  .progress.is-white-dark::-moz-progress-bar {
-    background-color: white;
-  }
-  .progress.is-white-dark::-ms-fill {
-    background-color: white;
-  }
-  .progress.is-white-dark:indeterminate {
-    background-image: linear-gradient(to right, white 30%, #363636 30%);
-  }
-  .progress.is-black-dark::-webkit-progress-value {
-    background-color: #0a0a0a;
-  }
-  .progress.is-black-dark::-moz-progress-bar {
-    background-color: #0a0a0a;
-  }
-  .progress.is-black-dark::-ms-fill {
-    background-color: #0a0a0a;
-  }
-  .progress.is-black-dark:indeterminate {
-    background-image: linear-gradient(to right, #0a0a0a 30%, #363636 30%);
-  }
-  .progress.is-light-dark::-webkit-progress-value {
-    background-color: whitesmoke;
-  }
-  .progress.is-light-dark::-moz-progress-bar {
-    background-color: whitesmoke;
-  }
-  .progress.is-light-dark::-ms-fill {
-    background-color: whitesmoke;
-  }
-  .progress.is-light-dark:indeterminate {
-    background-image: linear-gradient(to right, whitesmoke 30%, #363636 30%);
-  }
-  .progress.is-dark-dark::-webkit-progress-value {
-    background-color: #363636;
-  }
-  .progress.is-dark-dark::-moz-progress-bar {
-    background-color: #363636;
-  }
-  .progress.is-dark-dark::-ms-fill {
-    background-color: #363636;
-  }
-  .progress.is-dark-dark:indeterminate {
-    background-image: linear-gradient(to right, #363636 30%, #363636 30%);
-  }
-  .progress.is-primary-dark::-webkit-progress-value {
-    background-color: #00d1b2;
-  }
-  .progress.is-primary-dark::-moz-progress-bar {
-    background-color: #00d1b2;
-  }
-  .progress.is-primary-dark::-ms-fill {
-    background-color: #00d1b2;
-  }
-  .progress.is-primary-dark:indeterminate {
-    background-image: linear-gradient(to right, #00d1b2 30%, #363636 30%);
-  }
-  .progress.is-link-dark::-webkit-progress-value {
-    background-color: #3273dc;
-  }
-  .progress.is-link-dark::-moz-progress-bar {
-    background-color: #3273dc;
-  }
-  .progress.is-link-dark::-ms-fill {
-    background-color: #3273dc;
-  }
-  .progress.is-link-dark:indeterminate {
-    background-image: linear-gradient(to right, #3273dc 30%, #363636 30%);
-  }
-  .progress.is-info-dark::-webkit-progress-value {
-    background-color: #209cee;
-  }
-  .progress.is-info-dark::-moz-progress-bar {
-    background-color: #209cee;
-  }
-  .progress.is-info-dark::-ms-fill {
-    background-color: #209cee;
-  }
-  .progress.is-info-dark:indeterminate {
-    background-image: linear-gradient(to right, #209cee 30%, #363636 30%);
-  }
-  .progress.is-success-dark::-webkit-progress-value {
-    background-color: #23d160;
-  }
-  .progress.is-success-dark::-moz-progress-bar {
-    background-color: #23d160;
-  }
-  .progress.is-success-dark::-ms-fill {
-    background-color: #23d160;
-  }
-  .progress.is-success-dark:indeterminate {
-    background-image: linear-gradient(to right, #23d160 30%, #363636 30%);
-  }
-  .progress.is-warning-dark::-webkit-progress-value {
-    background-color: #ffdd57;
-  }
-  .progress.is-warning-dark::-moz-progress-bar {
-    background-color: #ffdd57;
-  }
-  .progress.is-warning-dark::-ms-fill {
-    background-color: #ffdd57;
-  }
-  .progress.is-warning-dark:indeterminate {
-    background-image: linear-gradient(to right, #ffdd57 30%, #363636 30%);
-  }
-  .progress.is-danger-dark::-webkit-progress-value {
-    background-color: #ff3860;
-  }
-  .progress.is-danger-dark::-moz-progress-bar {
-    background-color: #ff3860;
-  }
-  .progress.is-danger-dark::-ms-fill {
-    background-color: #ff3860;
-  }
-  .progress.is-danger-dark:indeterminate {
-    background-image: linear-gradient(to right, #ff3860 30%, #363636 30%);
-  }
+  /*.progress::-webkit-progress-bar {*/
+  /*  background-color: #363636;*/
+  /*}*/
+  /*.progress::-webkit-progress-value {*/
+  /*  background-color: #b5b5b5;*/
+  /*}*/
+  /*.progress::-moz-progress-bar {*/
+  /*  background-color: #b5b5b5;*/
+  /*}*/
+  /*.progress::-ms-fill {*/
+  /*  background-color: #b5b5b5;*/
+  /*}*/
+  /*.progress:indeterminate {*/
+  /*  background-color: #363636;*/
+  /*  background-image: linear-gradient(to right, #4a4a4a 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-white::-webkit-progress-value {*/
+  /*  background-color: #e6e6e6;*/
+  /*}*/
+  /*.progress.is-white::-moz-progress-bar {*/
+  /*  background-color: #e6e6e6;*/
+  /*}*/
+  /*.progress.is-white::-ms-fill {*/
+  /*  background-color: #e6e6e6;*/
+  /*}*/
+  /*.progress.is-white:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #e6e6e6 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-black::-webkit-progress-value {*/
+  /*  background-color: black;*/
+  /*}*/
+  /*.progress.is-black::-moz-progress-bar {*/
+  /*  background-color: black;*/
+  /*}*/
+  /*.progress.is-black::-ms-fill {*/
+  /*  background-color: black;*/
+  /*}*/
+  /*.progress.is-black:indeterminate {*/
+  /*  background-image: linear-gradient(to right, black 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-light::-webkit-progress-value {*/
+  /*  background-color: #dbdbdb;*/
+  /*}*/
+  /*.progress.is-light::-moz-progress-bar {*/
+  /*  background-color: #dbdbdb;*/
+  /*}*/
+  /*.progress.is-light::-ms-fill {*/
+  /*  background-color: #dbdbdb;*/
+  /*}*/
+  /*.progress.is-light:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #dbdbdb 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-dark::-webkit-progress-value {*/
+  /*  background-color: #1c1c1c;*/
+  /*}*/
+  /*.progress.is-dark::-moz-progress-bar {*/
+  /*  background-color: #1c1c1c;*/
+  /*}*/
+  /*.progress.is-dark::-ms-fill {*/
+  /*  background-color: #1c1c1c;*/
+  /*}*/
+  /*.progress.is-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #1c1c1c 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-primary::-webkit-progress-value {*/
+  /*  background-color: #009e86;*/
+  /*}*/
+  /*.progress.is-primary::-moz-progress-bar {*/
+  /*  background-color: #009e86;*/
+  /*}*/
+  /*.progress.is-primary::-ms-fill {*/
+  /*  background-color: #009e86;*/
+  /*}*/
+  /*.progress.is-primary:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #009e86 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-link::-webkit-progress-value {*/
+  /*  background-color: #205bbc;*/
+  /*}*/
+  /*.progress.is-link::-moz-progress-bar {*/
+  /*  background-color: #205bbc;*/
+  /*}*/
+  /*.progress.is-link::-ms-fill {*/
+  /*  background-color: #205bbc;*/
+  /*}*/
+  /*.progress.is-link:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #205bbc 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-info::-webkit-progress-value {*/
+  /*  background-color: #0f81cc;*/
+  /*}*/
+  /*.progress.is-info::-moz-progress-bar {*/
+  /*  background-color: #0f81cc;*/
+  /*}*/
+  /*.progress.is-info::-ms-fill {*/
+  /*  background-color: #0f81cc;*/
+  /*}*/
+  /*.progress.is-info:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #0f81cc 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-success::-webkit-progress-value {*/
+  /*  background-color: #1ca64c;*/
+  /*}*/
+  /*.progress.is-success::-moz-progress-bar {*/
+  /*  background-color: #1ca64c;*/
+  /*}*/
+  /*.progress.is-success::-ms-fill {*/
+  /*  background-color: #1ca64c;*/
+  /*}*/
+  /*.progress.is-success:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #1ca64c 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-warning::-webkit-progress-value {*/
+  /*  background-color: #ffd324;*/
+  /*}*/
+  /*.progress.is-warning::-moz-progress-bar {*/
+  /*  background-color: #ffd324;*/
+  /*}*/
+  /*.progress.is-warning::-ms-fill {*/
+  /*  background-color: #ffd324;*/
+  /*}*/
+  /*.progress.is-warning:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #ffd324 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-danger::-webkit-progress-value {*/
+  /*  background-color: #ff0537;*/
+  /*}*/
+  /*.progress.is-danger::-moz-progress-bar {*/
+  /*  background-color: #ff0537;*/
+  /*}*/
+  /*.progress.is-danger::-ms-fill {*/
+  /*  background-color: #ff0537;*/
+  /*}*/
+  /*.progress.is-danger:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #ff0537 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-white-dark::-webkit-progress-value {*/
+  /*  background-color: white;*/
+  /*}*/
+  /*.progress.is-white-dark::-moz-progress-bar {*/
+  /*  background-color: white;*/
+  /*}*/
+  /*.progress.is-white-dark::-ms-fill {*/
+  /*  background-color: white;*/
+  /*}*/
+  /*.progress.is-white-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, white 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-black-dark::-webkit-progress-value {*/
+  /*  background-color: #0a0a0a;*/
+  /*}*/
+  /*.progress.is-black-dark::-moz-progress-bar {*/
+  /*  background-color: #0a0a0a;*/
+  /*}*/
+  /*.progress.is-black-dark::-ms-fill {*/
+  /*  background-color: #0a0a0a;*/
+  /*}*/
+  /*.progress.is-black-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #0a0a0a 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-light-dark::-webkit-progress-value {*/
+  /*  background-color: whitesmoke;*/
+  /*}*/
+  /*.progress.is-light-dark::-moz-progress-bar {*/
+  /*  background-color: whitesmoke;*/
+  /*}*/
+  /*.progress.is-light-dark::-ms-fill {*/
+  /*  background-color: whitesmoke;*/
+  /*}*/
+  /*.progress.is-light-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, whitesmoke 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-dark-dark::-webkit-progress-value {*/
+  /*  background-color: #363636;*/
+  /*}*/
+  /*.progress.is-dark-dark::-moz-progress-bar {*/
+  /*  background-color: #363636;*/
+  /*}*/
+  /*.progress.is-dark-dark::-ms-fill {*/
+  /*  background-color: #363636;*/
+  /*}*/
+  /*.progress.is-dark-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #363636 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-primary-dark::-webkit-progress-value {*/
+  /*  background-color: #00d1b2;*/
+  /*}*/
+  /*.progress.is-primary-dark::-moz-progress-bar {*/
+  /*  background-color: #00d1b2;*/
+  /*}*/
+  /*.progress.is-primary-dark::-ms-fill {*/
+  /*  background-color: #00d1b2;*/
+  /*}*/
+  /*.progress.is-primary-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #00d1b2 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-link-dark::-webkit-progress-value {*/
+  /*  background-color: #3273dc;*/
+  /*}*/
+  /*.progress.is-link-dark::-moz-progress-bar {*/
+  /*  background-color: #3273dc;*/
+  /*}*/
+  /*.progress.is-link-dark::-ms-fill {*/
+  /*  background-color: #3273dc;*/
+  /*}*/
+  /*.progress.is-link-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #3273dc 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-info-dark::-webkit-progress-value {*/
+  /*  background-color: #209cee;*/
+  /*}*/
+  /*.progress.is-info-dark::-moz-progress-bar {*/
+  /*  background-color: #209cee;*/
+  /*}*/
+  /*.progress.is-info-dark::-ms-fill {*/
+  /*  background-color: #209cee;*/
+  /*}*/
+  /*.progress.is-info-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #209cee 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-success-dark::-webkit-progress-value {*/
+  /*  background-color: #23d160;*/
+  /*}*/
+  /*.progress.is-success-dark::-moz-progress-bar {*/
+  /*  background-color: #23d160;*/
+  /*}*/
+  /*.progress.is-success-dark::-ms-fill {*/
+  /*  background-color: #23d160;*/
+  /*}*/
+  /*.progress.is-success-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #23d160 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-warning-dark::-webkit-progress-value {*/
+  /*  background-color: #ffdd57;*/
+  /*}*/
+  /*.progress.is-warning-dark::-moz-progress-bar {*/
+  /*  background-color: #ffdd57;*/
+  /*}*/
+  /*.progress.is-warning-dark::-ms-fill {*/
+  /*  background-color: #ffdd57;*/
+  /*}*/
+  /*.progress.is-warning-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #ffdd57 30%, #363636 30%);*/
+  /*}*/
+  /*.progress.is-danger-dark::-webkit-progress-value {*/
+  /*  background-color: #ff3860;*/
+  /*}*/
+  /*.progress.is-danger-dark::-moz-progress-bar {*/
+  /*  background-color: #ff3860;*/
+  /*}*/
+  /*.progress.is-danger-dark::-ms-fill {*/
+  /*  background-color: #ff3860;*/
+  /*}*/
+  /*.progress.is-danger-dark:indeterminate {*/
+  /*  background-image: linear-gradient(to right, #ff3860 30%, #363636 30%);*/
+  /*}*/
   .table {
     background-color: #0a0a0a;
     color: #dbdbdb;
