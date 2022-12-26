@@ -44,6 +44,7 @@ function renderProblems() {
     rootProblems.forEach(function (item) {
         div.appendChild(renderChildren(item))
     })
+    console.log(div,'222222222222222222222222222')
     return div
 }
 
@@ -146,7 +147,9 @@ function findRoot(item) {
     return findRoot(parent)
 }
 
-function renderProblem(item) {
+
+function renderProblem(item,collapse=true) {
+    
     let article = document.createElement("article");
     //todo change colours based on status (closed, claimed, open)
     article.className = "message is-dark";
@@ -162,9 +165,7 @@ function renderProblem(item) {
     var head = document.createElement("div").appendChild(htext)
     head.className = "message-header"
     head.style = "cursor: pointer;"
-    head.onclick = function () {
-        showDetails(item)
-    }
+    
     md = new showdown.Converter({
         extensions: [...bindings]
     })
@@ -172,8 +173,13 @@ function renderProblem(item) {
     ht = md.makeHtml(item.content)
     mdht = document.createElement("div")
     mdht.innerHTML = ht
+    mdht.className = "problem-body"
+    if (collapse==true){mdht.style.display='none'}
+    else{mdht.style.display='block'}
+    
     desc = document.createElement("div")
     desc.className = "message-body";
+    desc.style.display='block'
     desc.appendChild(mdht)
     //desc.innerText = item.content//content
     //desc.appendChild(document.createElement("br"))
@@ -194,15 +200,41 @@ function renderProblem(item) {
     suid.style.fontSize = "x-small"
     desc.appendChild(suid)
     desc.appendChild(document.createElement("br"))
-    article.appendChild(head)
-    article.appendChild(desc)
     desc.id = `childrenof` + item.mindmachineUID
+
+    article.appendChild(head)
+
+    head.onclick = function () {
+        showDetails(item)
+
+        if(document.getElementById(`childrenof` + item.mindmachineUID).firstChild.style.display=='block'){
+                 
+                    document.getElementById(`childrenof` + item.mindmachineUID).firstChild.style.display='none'
+                  
+                      
+        } else {
+            document.getElementById(`childrenof` + item.mindmachineUID).firstElementChild.style.display='block'
+        }
+
+        
+      
+
+        
+      
+    }
+    desc_ = document.createElement("div")
+    desc_.className = "message-body";
+    article.appendChild(desc)
     return article
+}
+function collapseProblem(article){
+
+
 }
 
 function showDetails(event) {
     document.getElementById("details").replaceChildren()
-    document.getElementById("details").appendChild(renderProblem(event))
+    document.getElementById("details").appendChild(renderProblem(event,false))
     if (event.kind === 640899) {
         let claim_div = document.createElement("div")
         let claim_btn = document.createElement("button")
