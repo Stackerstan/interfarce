@@ -48,7 +48,6 @@ function renderAllDoki() {
             }else(doc.innerHTML = d.GoalOrProblem)})
 
         }else{doc.innerHTML = d.GoalOrProblem}
-        console.log(saz)
         // doc.innerHTML = d.GoalOrProblem
         n = document.createElement("nav")
         n.className = "level-item level-right"
