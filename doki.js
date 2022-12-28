@@ -40,7 +40,15 @@ function renderAllDoki() {
     dokiObjects.forEach(function (d) {
         doc = document.createElement("div")
         doc.className = "box"
-        doc.innerText = d.GoalOrProblem
+        // doc.innerText = d.GoalOrProblem
+        saz = dokiObjects.get(d.UID)
+        if (saz.Patches !== null ){
+            saz.Patches.some(patch =>{if ((patch.MergedBy.length !== 64) && (patch.RejectedBy.length !== 64)){
+                doc.innerHTML = '<strong>'+d.GoalOrProblem+'</strong>'
+            }else(doc.innerHTML = d.GoalOrProblem)})
+
+        }else{doc.innerHTML = d.GoalOrProblem}
+        // doc.innerHTML = d.GoalOrProblem
         n = document.createElement("nav")
         n.className = "level-item level-right"
         a = document.createElement("a")
@@ -140,6 +148,7 @@ function renderOneDoki(id) {
         goal_or_problem = document.createElement("div")
         goal_or_problem.className = "box"
         goal_or_problem.innerText = saz.GoalOrProblem
+        // goal_or_problem.innerHTML = '<strong>'+saz.GoalOrProblem+'</strong>'
         doc.appendChild(goal_or_problem)
         md = new showdown.Converter({
             extensions: [...bindings]
