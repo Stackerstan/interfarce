@@ -17,6 +17,6 @@
     "1": "2607e219c3092533b28470da9385b8346dea2d4b77a32a95512c54ccb897536c"
   },
   "relays": {
-    "80482e60178c2ce996da6d67577f56a2b2c47ccb1c84c81f2b7960637cb71b78": [ "wss://nostr.rocks" , "wss://relayer.fiatjaf.com" , "wss://nostr.688.org" , "wss://nostr-pub.wellorder.net" , "wss://nostr.walletofsatoshi.com" , "wss://nostr.bongbong.com"]
+    "543210b5f6c3071c3135d850449f8bf91efffb5ed1153e5fcbb2d95b79262b57": [ "wss://nostr.rocks" , "wss://relayer.fiatjaf.com" , "wss://nostr.688.org" , "wss://nostr-pub.wellorder.net" , "wss://nostr.walletofsatoshi.com" , "wss://nostr.bongbong.com"]
   }
 }
