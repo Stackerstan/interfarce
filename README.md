@@ -26,7 +26,7 @@ If you are running the mindmachine on Windows using WSL2:
 
 4. Add this repository as an upstream source and pull any changes:
 ```
-git remote add upstream git://github.com/stackerstan/interfarce //only needs to be done once
+git remote add upstream git@github.com:Stackerstan/interfarce.git //only needs to be done once
 git checkout master //just to make sure you're on the correct branch
 git pull upstream master //this grabs any code that has changed, you want to be working on the latest 'version'
 git push //update your remote fork with the changes you just pulled from upstream master
