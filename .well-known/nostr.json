@@ -15,7 +15,8 @@
     "ngmi": "408ff332832c2f8b2adadd53daa6b7bfb6f560b18f2d9da68810adee17330275",
     "Sausage": "6b00177ef34d10b552537352171d7f1d6520d308d9b0ae653c7ab7889b72e761",
     "DiletPoly": "05108eebfc54224fc8d487ad86bb3ed380b229e03b9eb830246303e1c4756728",
-    "1": "2607e219c3092533b28470da9385b8346dea2d4b77a32a95512c54ccb897536c"
+    "1": "2607e219c3092533b28470da9385b8346dea2d4b77a32a95512c54ccb897536c",
+    "larry": "npub132w0sg64x08h2klxvytsamgcu63qqmk8d2yv8ltay8nvzwahk6wsyg2j8n"
   },
   "relays": {
     "543210b5f6c3071c3135d850449f8bf91efffb5ed1153e5fcbb2d95b79262b57": [ "wss://nostr.rocks" , "wss://relayer.fiatjaf.com" , "wss://nostr.688.org" , "wss://nostr-pub.wellorder.net" , "wss://nostr.walletofsatoshi.com" , "wss://nostr.bongbong.com"]
