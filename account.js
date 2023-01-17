@@ -42,9 +42,11 @@ function renderAccountDetails() {
     deets.className = "content"
     let ident;
     ident = identityObjects.get(pubKeyMinus2)
+
     if (typeof ident === "undefined") {
         ident = {Account: pubKeyMinus2, Name: "", About: "", UshBy: ""}
     }
+
     deets.appendChild(createElement("Help", "A new account and corrosponding seed words are generated when you first load this page. \nTo generate a new account, clear your browser's data for this site and reload it.\nIf you start using this account, you should write down your seed words (especially if you claim a Username that you want to keep)."))
     deets.appendChild(createElement("Account", ident.Account))
     deets.appendChild(createElement("Seed Words - write these down if you want to continue using this Account.", localStorage.getItem('backupwords')))
@@ -88,8 +90,8 @@ function createElement(key, value) {
 function importFromnos2x() {
         if (window.nostr) {
 
-        a=window.nostr.getPublicKey().then((value)=>{pubKey=value},(error)=>window.alert(error))
-       
+        a=window.nostr.getPublicKey()
+        a.then((value)=>{pubKey=value},(error)=>window.alert(error))
           window.alert("Using nos2x/alby nostr pub key")
           
           pubKeyMinus2 = pubKey.substring(2);
@@ -97,6 +99,7 @@ function importFromnos2x() {
         else {
             window.alert("window.nostr is not found")
         }
+        location.reload()
 }
 
 function recoverSeed() {

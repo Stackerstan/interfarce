@@ -70,10 +70,7 @@
         if ((localStorage.getItem('privatekey') !== null) && (localStorage.getItem("usenos2x") !== 'true')) {
             pubKey = nobleSecp256k1.getPublicKey(localStorage.getItem('privatekey'), true);
         }
-        if (localStorage.getItem("usenos2x") === 'true'){
-            a=window.nostr.getPublicKey().then((value)=>{pubKey=value},(error)=>window.alert(error))
-            
-        }
+
     
         // if (window.nostr) {
 
@@ -111,10 +108,12 @@
                 });
             });
             });
+            
     </script>
     
 </head>
 <body>
+
 <nav aria-label="main navigation" class="navbar is-active is-light" role="navigation">
     <div class="navbar-brand">
         <div class="navbar-item" >
@@ -623,4 +622,5 @@ subscribed = false
 
 
 </body>
+
 </html>
