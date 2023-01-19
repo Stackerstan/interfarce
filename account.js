@@ -42,9 +42,11 @@ function renderAccountDetails() {
     deets.className = "content"
     let ident;
     ident = identityObjects.get(pubKeyMinus2)
+
     if (typeof ident === "undefined") {
         ident = {Account: pubKeyMinus2, Name: "", About: "", UshBy: ""}
     }
+
     deets.appendChild(createElement("Help", "A new account and corrosponding seed words are generated when you first load this page. \nTo generate a new account, clear your browser's data for this site and reload it.\nIf you start using this account, you should write down your seed words (especially if you claim a Username that you want to keep)."))
     deets.appendChild(createElement("Account", ident.Account))
     deets.appendChild(createElement("Seed Words - write these down if you want to continue using this Account.", localStorage.getItem('backupwords')))
@@ -84,6 +86,20 @@ function createElement(key, value) {
     box.appendChild(b)
     box.appendChild(v)
     return box
+}
+function importFromnos2x() {
+        if (window.nostr) {
+
+        a=window.nostr.getPublicKey()
+        a.then((value)=>{pubKey=value},(error)=>window.alert(error))
+          window.alert("Using nos2x/alby nostr pub key")
+          
+          pubKeyMinus2 = pubKey.substring(2);
+        }
+        else {
+            window.alert("window.nostr is not found")
+        }
+        location.reload()
 }
 
 function recoverSeed() {
@@ -155,7 +171,13 @@ The About Me section of your Profile is a short bio that can be modified wheneve
     <textarea class="textarea" placeholder="About" id="about input" maxlength="560"></textarea>
   </div>
 </div>
+<div>
 
+<input type="checkbox" name="nostrstatus" id="checkbox" value="true" onchange="usenos2xOnClick(this)"/>
+ 
+    <label for="subscribeNews">Existing Nostr User?</label>
+</div>
+ 
 <div class="field is-grouped">
   <div class="control">
     <button class="button is-link" onclick="setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value )" >Submit</button>
@@ -168,6 +190,17 @@ The About Me section of your Profile is a short bio that can be modified wheneve
 return form
 }
 
+function usenos2xOnClick(obj) {
+    if($(obj).is(":checked")){
+      importFromnos2x() //when checked
+      localStorage.setItem('usenos2x', true)
+      $("#page-header-inner").addClass("sticky");
+    }else{
+      alert("Using auto generated pub key");
+      localStorage.setItem('usenos2x', false ) //when not checked
+    }
+    
+  }
 function setBio(name, about) {
     sequence = 0
     if (identityObjects.get(pubKeyMinus2) !== undefined) {
@@ -176,13 +209,36 @@ function setBio(name, about) {
     sequence++
     content = JSON.stringify({name: name, about: about, sequence: sequence})
     et = makeEvent(content, "", 640400)
-    signHash(et.id).then(function (result) {
-        et.sig = result
-        sendIt(et)
-        console.log(et)
-        location.reload()
-    })
+    if ( localStorage.getItem('usenos2x')===false){    
+        signHash(e.id).then(
+    function (result) {
+        e.sig = result
+        sendIt(e)
+    },
+    function (error) {
+        console.log(error)
+    })}
+    else{
+        e = window.nostr.signEvent(e)
+        sendIt(e)
+    }
+    location.reload()
+
 }
+// if ( localStorage.getItem('usenos2x')===false){    
+//     signHash(e.id).then(
+// function (result) {
+//     e.sig = result
+//     sendIt(e)
+// },
+// function (error) {
+//     console.log(error)
+// })}
+// else{
+//     e = window.nostr.signEvent(e)
+//     sendIt(e)
+// }
+
 
 function opReturnForm() {
     let div = document.createElement("div")
@@ -221,11 +277,21 @@ function setOpReturn(address, proof) {
     let content = {"address": address, "proof": proof, sequence: sequence}
     let c = JSON.stringify(content)
     let e = makeEvent(c, "", 640406)
-    signHash(e.id).then(
-        function (result) {
+    if ( localStorage.getItem('usenos2x')!=='true'){    
+        signHash(e.id).then(
+            function (result) {
             e.sig = result
             sendIt(e)
-            location.reload()
-        }
-    )
+    },
+    function (error) {
+        console.log(error)
+    })}
+    else{
+        e = window.nostr.signEvent(e)
+        sendIt(e)
+    }
+    location.reload()
+
+    
+
 }

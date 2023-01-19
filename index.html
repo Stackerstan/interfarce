@@ -13,6 +13,7 @@
     <script src="https://bundle.run/buffer@6.0.3"></script>
     <script src="https://bundle.run/noble-secp256k1@1.2.14"></script>
     <script src="https://bundle.run/browserify-cipher@1.0.1"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="profile.js"></script>
     <script src="elements.js"></script>
     <script src="events.js"></script>
@@ -35,11 +36,6 @@
     <script src="connecting.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css' />
 
-    <style type="text/css" >
-        body {
-            font-family : 'Ubuntu', sans-serif;
-        }
-    </style>
     <script>
         function computeRawPrivkey(node) {
             return bitcoinjs.ECPair.fromPrivateKey(node.privateKey, {network: bitcoinjs.networks.mainnet});
@@ -71,9 +67,16 @@
             privKey = privKey.__D.toString('hex');
             localStorage.setItem('privatekey', privKey)
         }
-        if (localStorage.getItem('privatekey') !== null) {
+        if ((localStorage.getItem('privatekey') !== null) && (localStorage.getItem("usenos2x") !== 'true')) {
             pubKey = nobleSecp256k1.getPublicKey(localStorage.getItem('privatekey'), true);
         }
+
+    
+        // if (window.nostr) {
+
+        //   this.hasExtension = true
+        // }
+        
 
         //be aware that not all valid bitcoin pubkeys are valid nostr pubkeys. Valid bitcoin pubkeys include uncompressed pubkeys (that start with 04), compressed pubkeys whose y coordinate is positive (that start with 02), and compressed pubkeys whose y coordinate is negative (that start with 03).
         //Only the ones that start with 02 are valid for nostr, which then allows us to chop off the 02 when storing the pubkey.
@@ -105,10 +108,12 @@
                 });
             });
             });
+            
     </script>
     
 </head>
 <body>
+
 <nav aria-label="main navigation" class="navbar is-active is-light" role="navigation">
     <div class="navbar-brand">
         <div class="navbar-item" >
@@ -206,6 +211,7 @@ displayWhileConnecting()
         return "http" === t.slice(0, 4) && (t = "ws" + t.slice(4)), "ws" !== t.slice(0, 2) && (t = "wss://" + t), t.length && "/" === t[t.length - 1] && (t = t.slice(0, -1)), [t, ...r].join("?")
     }
 
+    // var relay = "ws://192.168.100.214:1031"
     var relay = "wss://mindmachine.688.org"
     relay = normalizeRelayURL(relay);
     document.getElementById("welay").innerText = relay
@@ -337,6 +343,19 @@ var eventsToSubscribe = []
         socket.send(sessionStorage.subscription);
         console.log("subscribed to doki events")
     }
+    function subscribeexpenses() {
+
+        var filter = {
+            "#eventer": [
+                "expenses"
+            ]
+        };
+        var subscription = ["REQ", "my-sub", filter];
+        subscription = JSON.stringify(subscription);
+        sessionStorage.subscription = subscription;
+        socket.send(sessionStorage.subscription);
+        console.log("subscribed to expenses events")
+        }
 
     function subscribeCurrentstate() {
 
@@ -379,6 +398,19 @@ var eventsToSubscribe = []
         socket.send(sessionStorage.subscription);
         console.log("subscribed to problem events")
     }
+    function subscribeexpenses() {
+
+    var filter = {
+        "#eventer": [
+            "expenses"
+        ]
+    };
+    var subscription = ["REQ", "my-sub", filter];
+    subscription = JSON.stringify(subscription);
+    sessionStorage.subscription = subscription;
+    socket.send(sessionStorage.subscription);
+    console.log("subscribed to expenses events")
+    }
 
 
     socket.addEventListener('open', function () {
@@ -403,6 +435,7 @@ subscribed = false
         subscribeCurrentstate()
         detect_id()
         subscribeidentity()
+        subscribeexpenses()
     }
     }
 
@@ -497,14 +530,19 @@ subscribed = false
 
     function makeNote(note, etag) {
         e = makeEvent(note, etag, 1)
-        signHash(e.id).then(
+        if ( localStorage.getItem('usenos2x')===false){    
+                signHash(e.id).then(
             function (result) {
                 e.sig = result
                 sendIt(e)
             },
             function (error) {
                 console.log(error)
-            })
+            })}
+            else{
+                e = window.nostr.signEvent(e)
+                sendIt(e)
+            }
     }
 
     function sendIt(signedEvent) {
@@ -584,4 +622,5 @@ subscribed = false
 
 
 </body>
+
 </html>
