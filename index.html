@@ -481,7 +481,6 @@ subscribed = false
 <script>
 
     async function sendEventToMindmachine(content, tags, kind, pubkey) {
-        if (typeof JSON.parse(content) === "object") {
             et = makeEvent(content, tags, kind, pubkey)
 
             if (!window.nostr) {
@@ -493,9 +492,8 @@ subscribed = false
                 var sendable = ["EVENT", signed];
                 sessionStorage.sendable = JSON.stringify(sendable);
                 mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
+                return signed
             }
-        }
-
     }
 
     function makeNote(note, etag) {
@@ -534,7 +532,6 @@ subscribed = false
                 }
             }
         }
-       if (kind !== 1) {
             if (identityObjects.get(pubkey) !== undefined) {
 
                 sequence = identityObjects.get(pubkey).GlobalSequence + 1
@@ -544,7 +541,6 @@ subscribed = false
                 sequence = 1
                 tags.push(["sequence", sequence.toString()])
             }
-        }
         tags.push(["height", currentStatus.Height.toString()])
         k = 1
         if (kind !== undefined) {

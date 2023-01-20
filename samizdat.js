@@ -15,10 +15,12 @@ function displaySamizdat() {
     document.getElementById("maincontent").replaceChildren(prepWindow())
     document.getElementById("heading").innerText = "Samizdatree"// spontaneously organising tree of self-published notes and other stuff
     document.getElementById("heading").appendChild(spacer())
-    document.getElementById("heading").appendChild(helpButton("58b02c07e1971ad9178293e0c0d39509a715db35ba3a989ed97d25c6f8e9ad07"))
     document.getElementById("content").replaceChildren(loadingSign())
     waitForSamizdatReady(function () {
-        renderSamizdat()
+        getMuhPubkey().then(pubkey => {
+            document.getElementById("heading").appendChild(helpButton("58b02c07e1971ad9178293e0c0d39509a715db35ba3a989ed97d25c6f8e9ad07", pubkey))
+            renderSamizdat(pubkey)
+        })
     })
     rewriteURL("samizdat")
 }
@@ -29,7 +31,7 @@ function spacer() {
     return s
 }
 
-function helpButton(doki) {
+function helpButton(doki, pubkey) {
     a = document.createElement("a")
     a.onclick = function () {
         saz = dokiObjects.get(doki)
@@ -48,7 +50,7 @@ function helpButton(doki) {
             edit.className = "button is-link"
             edit.innerText = "Edit this"
             edit.onclick = function () {
-                if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                if (!accountIsInIdentityTree(pubkey)) {
                     alert("You must be in the Identity Tree to submit edits")
                 }
                 setURLID("doki_id", doki)
@@ -63,7 +65,7 @@ function helpButton(doki) {
     return a
 }
 
-function renderSamizdat() {
+function renderSamizdat(pubkey) {
     box = document.createElement("div")
     box.className = "content"
     document.getElementById("content").replaceChildren(box)
@@ -72,20 +74,20 @@ function renderSamizdat() {
     // }
     samizdatObjects.forEach(function (event) {
         if (event.id === rootSamizdatId) {
-            box.appendChild(oneSamizdat(event))
+            box.appendChild(oneSamizdat(event, pubkey))
         }
                 event.tags.forEach(function (tags) {
                     if (tags[tags.length-1].length === 64) {
                         p = document.getElementById(tags[tags.length-1])
                         if (p !== null) {
-                            p.appendChild(oneSamizdat(event))
+                            p.appendChild(oneSamizdat(event, pubkey))
                         }
                     }
                 })
     })
 }
 
-function oneSamizdat(event) {
+function oneSamizdat(event, pubkey) {
     var ident
     identityObjects.forEach(function (object) {
         if (object.Account === event.pubkey) {
@@ -141,11 +143,11 @@ function oneSamizdat(event) {
     reply.onclick = function () {
         b = document.getElementById( 'replyform' )
         if (b !== null) {b.remove()}
-        if (!hasPermanym(pubKeyMinus2)) {
+        if (!hasPermanym(pubkey)) {
             alert("You should really create a username before commenting here")
         }
         item = document.getElementById(event.id + "reply")//append(newSamizdatForm(event.id, event.content))//appendChild(newSamizdatForm(event.id, event.content))
-        item.appendChild(newSamizdatForm(event.id, event.content))
+        item.appendChild(newSamizdatForm(event.id, pubkey))
     }
     span = document.createElement("span")
     span.className = "icon is-small"
@@ -173,7 +175,7 @@ function bluecheck(type) {
     return span
 }
 
-function newSamizdatForm(id, content) {
+function newSamizdatForm(id, pubkey) {
     form = document.createElement("div")
     form.className = "field"
     form.id = "replyform"
@@ -186,7 +188,7 @@ function newSamizdatForm(id, content) {
     btn.className = "button is-link"
     btn.innerText = "Reply"
     btn.onclick = function () {
-        broadcast( document.getElementById( 'reply input' ).value, id)
+        broadcast( document.getElementById( 'reply input' ).value, id, pubkey)
     }
     btnc = document.createElement("button")
     btnc.className = "button is-link is-light"
@@ -202,7 +204,7 @@ function newSamizdatForm(id, content) {
     return form
 }
 
-function broadcast(content, id) {
+function broadcast(content, id, pubkey) {
     etags = []
     if (id !== undefined) {
         if (id.length === 64) {
@@ -213,11 +215,8 @@ function broadcast(content, id) {
 
         }
     }
-    et = makeEvent(content, etags, 1)
-    signHash(et.id).then(function (result) {
-        et.sig = result
-        sendIt(et)
-        console.log(et)
+    sendEventToMindmachine(content, etags, 1, pubkey).then(sent => {
+        console.log(sent)
         location.reload()
     })
 }
