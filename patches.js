@@ -186,7 +186,7 @@ function displayPatchTools() {
 //                         }
 //                         var sendable = [ "EVENT", fullevent ];
 //                         sessionStorage.sendable = JSON.stringify( sendable );
-//                         socket.send( '["EVENT",' + JSON.stringify( JSON.parse( sessionStorage.sendable )[ 1 ] ) + ']' );
+//                         mindmachineSocket.send( '["EVENT",' + JSON.stringify( JSON.parse( sessionStorage.sendable )[ 1 ] ) + ']' );
 //                     }
 //                 }
 //             );

@@ -1,8 +1,10 @@
 function displayAccount() {
-    document.getElementById("maincontent").replaceChildren(prepWindow())
-    document.getElementById("heading").innerText = "Account Details (Currently logged in)"
-    document.getElementById("content").replaceChildren(renderAccountDetails())
-    document.getElementById("details").replaceChildren(updateAccountDetails(), document.createElement("br"), recoverSeed(), document.createElement("br"),  opReturnForm())
+    getMuhPubkey().then(pubkey => {
+        document.getElementById("maincontent").replaceChildren(prepWindow())
+        document.getElementById("heading").innerText = "Account Details (Currently logged in)"
+        document.getElementById("content").replaceChildren(renderAccountDetails(pubkey))
+        document.getElementById("details").replaceChildren(updateAccountDetails(pubkey), document.createElement("br"), recoverSeed(pubkey), document.createElement("br"),  opReturnForm(pubkey))
+    })
 }
 
 function isParticipant(pubkey) {
@@ -31,25 +33,23 @@ function hasPermanym(pubkey) {
     return false
 }
 
-function renderAccountDetails() {
-    // box = document.createElement("div")
-    // box.className = "box"
-    // heading = document.createElement("div")
-    // heading.className = "is-3"
-    // heading.textContent = "Current Account Details"
-    // box.appendChild(heading)
+function renderAccountDetails(pubkey) {
     deets = document.createElement("div")
     deets.className = "content"
     let ident;
-    ident = identityObjects.get(pubKeyMinus2)
+    ident = identityObjects.get(pubkey)
 
     if (typeof ident === "undefined") {
-        ident = {Account: pubKeyMinus2, Name: "", About: "", UshBy: ""}
+        ident = {Account: pubkey, Name: "", About: "", UshBy: ""}
     }
 
     deets.appendChild(createElement("Help", "A new account and corrosponding seed words are generated when you first load this page. \nTo generate a new account, clear your browser's data for this site and reload it.\nIf you start using this account, you should write down your seed words (especially if you claim a Username that you want to keep)."))
-    deets.appendChild(createElement("Account", ident.Account))
-    deets.appendChild(createElement("Seed Words - write these down if you want to continue using this Account.", localStorage.getItem('backupwords')))
+    deets.appendChild(createElement("Pubkey", ident.Account))
+    if (window.nostr) {
+        deets.appendChild(createElement("Seed Words", "You are using a browser plugin to manage your private key(s), please refer to that for your recovery options."))
+    } else {
+        deets.appendChild(createElement("Seed Words - write these down if you want to continue using this Account.", localStorage.getItem('backupwords')))
+    }
     deets.appendChild(createElement("Username (permanent psudonym)", ident.Name))
     deets.appendChild(createElement("About", ident.About))
     var ushby;
@@ -87,25 +87,12 @@ function createElement(key, value) {
     box.appendChild(v)
     return box
 }
-function importFromnos2x() {
-        if (window.nostr) {
 
-        a=window.nostr.getPublicKey()
-        a.then((value)=>{pubKey=value},(error)=>window.alert(error))
-          window.alert("Using nos2x/alby nostr pub key")
-          
-          pubKeyMinus2 = pubKey.substring(2);
-        }
-        else {
-            window.alert("window.nostr is not found")
-        }
-        location.reload()
-}
-
-function recoverSeed() {
-    form = document.createElement("div")
-    ident = identityObjects.get(pubKeyMinus2)
-    form.innerHTML = `
+function recoverSeed(pubkey) {
+    if (!window.nostr) {
+        form = document.createElement("div")
+        ident = identityObjects.get(pubkey)
+        form.innerHTML = `
 <h3 class="is-3">Import your existing account</h3>
 <div class="content">
 //todo: I can't get nos2x working cause I'm dumb
@@ -133,7 +120,9 @@ You can then provide a proof (event signed with alby or nos2x AND your existing 
   </div>
 </div>
     `
-    return form
+        return form
+    }
+    return document.createElement("p")
 }
 
 function restoreAccount(data) {
@@ -146,9 +135,34 @@ function restoreAccount(data) {
     location.reload()
 }
 
-function updateAccountDetails() {
+function updateAccountDetails(pubkey) {
     form = document.createElement("div")
-    ident = identityObjects.get(pubKeyMinus2)
+    //ident = identityObjects.get(pubkey)
+    submit = document.createElement("button")
+    submit.onclick = function () {
+        setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, pubkey )
+    }
+    submit.className = "button is-link"
+    submit.innerText = "Submit"
+    cancel = document.createElement("button")
+    cancel.onclick = function () {
+        document.getElementById('name input').value = '';document.getElementById('about input').value = '';
+    }
+    cancel.className = "button is-link is-light"
+    cancel.innerText = "Cancel"
+
+    buttons = document.createElement("div")
+    buttons.className = "field is-grouped"
+
+    control = document.createElement("div")
+    control.className = "control"
+
+    control.appendChild(submit)
+    control.appendChild(spacer())
+    control.appendChild(spacer())
+    control.appendChild(cancel)
+    buttons.appendChild(control)
+
     form.innerHTML = `
 <h3 class="is-3">Modify your profile</h3>
 <div class="content">
@@ -171,74 +185,24 @@ The About Me section of your Profile is a short bio that can be modified wheneve
     <textarea class="textarea" placeholder="About" id="about input" maxlength="560"></textarea>
   </div>
 </div>
-<div>
-
-<input type="checkbox" name="nostrstatus" id="checkbox" value="true" onchange="usenos2xOnClick(this)"/>
- 
-    <label for="subscribeNews">Existing Nostr User?</label>
-</div>
- 
-<div class="field is-grouped">
-  <div class="control">
-    <button class="button is-link" onclick="setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value )" >Submit</button>
-  </div>
-  <div class="control">
-    <button class="button is-link is-light" onclick="document.getElementById('name input').value = '';document.getElementById('about input').value = ''; ">Cancel</button>
-  </div>
-</div>
+<div> 
     `
+    form.appendChild(buttons)
 return form
 }
 
-function usenos2xOnClick(obj) {
-    if($(obj).is(":checked")){
-      importFromnos2x() //when checked
-      localStorage.setItem('usenos2x', true)
-      $("#page-header-inner").addClass("sticky");
-    }else{
-      alert("Using auto generated pub key");
-      localStorage.setItem('usenos2x', false ) //when not checked
-    }
-    
-  }
-function setBio(name, about) {
+function setBio(name, about, pubkey) {
     sequence = 0
-    if (identityObjects.get(pubKeyMinus2) !== undefined) {
-        sequence = identityObjects.get(pubKeyMinus2).Sequence
+    if (identityObjects.get(pubkey) !== undefined) {
+        sequence = identityObjects.get(pubkey).Sequence
     }
     sequence++
     content = JSON.stringify({name: name, about: about, sequence: sequence})
-    et = makeEvent(content, "", 640400)
-    if ( localStorage.getItem('usenos2x')===false){    
-        signHash(e.id).then(
-    function (result) {
-        e.sig = result
-        sendIt(e)
-    },
-    function (error) {
-        console.log(error)
-    })}
-    else{
-        e = window.nostr.signEvent(e)
-        sendIt(e)
-    }
-    location.reload()
-
+    sendEventToMindmachine(content, "", 640400, pubkey).then(signed => {
+        console.log(JSON.stringify(signed))
+        location.reload()
+    })
 }
-// if ( localStorage.getItem('usenos2x')===false){    
-//     signHash(e.id).then(
-// function (result) {
-//     e.sig = result
-//     sendIt(e)
-// },
-// function (error) {
-//     console.log(error)
-// })}
-// else{
-//     e = window.nostr.signEvent(e)
-//     sendIt(e)
-// }
-
 
 function opReturnForm() {
     let div = document.createElement("div")
@@ -268,10 +232,10 @@ function opReturnForm() {
     return div
 }
 
-function setOpReturn(address, proof) {
+function setOpReturn(address, proof, pubkey) {
     sequence = 0
-    if (identityObjects.get(pubKeyMinus2) !== undefined) {
-        sequence = identityObjects.get(pubKeyMinus2).Sequence
+    if (identityObjects.get(pubkey) !== undefined) {
+        sequence = identityObjects.get(pubkey).Sequence
     }
     sequence++
     let content = {"address": address, "proof": proof, sequence: sequence}
