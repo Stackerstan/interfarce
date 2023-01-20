@@ -45,7 +45,7 @@ function generateKeypair() {
         privKey = privKey.__D.toString('hex');
         localStorage.setItem('privatekey', privKey)
     }
-    if ((localStorage.getItem('privatekey') !== null) && (localStorage.getItem("usenos2x") !== 'true')) {
+    if (localStorage.getItem('privatekey') !== null) {
         pubKeyTemp = nobleSecp256k1.getPublicKey(localStorage.getItem('privatekey'), true);
     }
 
@@ -76,82 +76,18 @@ function toHexString(byteArray) {
 }
 
 
-
-async function testSignEvent() {
-    getMuhPubkey().then(pubkey => {
-        var now = Math.floor( Date.now() / 1000 );
-        var event = {
-            "content"    : "test note",
-            "created_at" : now,
-            "kind"       : 1,
-            "tags"       : [],
-            "pubkey"     : pubkey,
-        }
-        signEvent( event ).then(signed => {
-            return signed
-        })
-    })
-
-    // if (window.nostr) {
-    //     console.log()
-    //     window.nostr.getPublicKey().then(pubkey => {
-    //         console.log()
-    //         event.pubkey = pubkey
-    //         return signEvent( event );
-    //     })
-    // } else if (pubKey.length > 0) {
-    //     console.log()
-    //     event.pubkey = pubKey
-    // } else {
-    //     console.log()
-    //     alert("you don't have a pubkey")
-    // }
-    // console.log()
-    // //return signEvent( event );
-}
-
-async function signEvent(event) {
-    var eventArray = [
-        0,                    // Reserved for future use
-        event['pubkey'],        // The sender's public key
-        event['created_at'],    // Unix timestamp
-        event['kind'],        // Message “kind” or type
-        event['tags'],        // Tags identify replies/recipients
-        event['content']        // Your note contents
-    ];
-    var eventData = JSON.stringify( eventArray );
-    event.id  = sha256( eventData ).toString( 'hex' )
-    if (!window.nostr) {
-        alert("no nostr")
-    }
-    if (window.nostr) {
-        signWithNos2x()
-    }
-    window.nostr.signEvent( event ).then(signedEvent => {
-            console.log()
-            if ( typeof( signedEvent ) == "string" ) {
-                console.log(times)
-                console.log(signedEvent)
-                event.sig = signedEvent;
-            } else {
-                console.log(times)
-                console.log(signedEvent.sig)
-                event.sig = signedEvent.sig;
-            }
-            return event
-        })
-}
-
-async function signWithNos2x(event) {
-    let sig = await window.nostr.signEvent( event )
-    return sig
-}
-
-
 async function signAsynchronously(event) {
     event.id = window.NostrTools.getEventHash(event)
-    if (false) {
-        event.sig = await signEvent(event, store.state.keys.priv)
+    if (!window.nostr) {
+        console.log("no nostr")
+        privateKey = localStorage.getItem('privatekey')
+        if ((typeof privateKey) === "string") {
+            sig = window.NostrTools.signEvent(et, privateKey)
+            event.sig = sig
+            return event
+        } else {
+            throw new Error('No private key found.')
+        }
     } else if (window.nostr) {
         let signatureOrEvent = await window.nostr.signEvent(event)
         switch (typeof signatureOrEvent) {

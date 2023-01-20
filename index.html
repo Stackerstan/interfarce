@@ -53,33 +53,42 @@
 
     </script>
     <script>
-        waitForNostr(function () {
-            console.log()
-            getMuhPubkey().then(pubkey => {
-                var now = Math.floor( Date.now() / 1000 );
-                var event = {
-                    "content"    : "test note",
-                    "created_at" : now,
-                    "kind"       : 1,
-                    "tags"       : [],
-                    "pubkey"     : pubkey,
-                }
-                console.log()
-                signAsynchronously(event).then(s => {
-                    console.log(JSON.stringify(s))
-                })
-                // signWithNos2x(event).then(signed => {
-                //     console.log(signed)
-                // })
-                console.log()
+        waitForStatusReady(function () {
+            getMuhPubkey().then(x => {
+                //disable sending to relays if you run this test:
+                //sendEventToMindmachine("test note", "", 1, x)
             })
-            console.log()
+        })
+        // waitForEverythingReady(function () {
+        //     getMuhPubkey().then(x => {
+        //         testSignEvent()
+        //     })
+        // })
+        waitForNostr(function () {
+            getMuhPubkey().then(pubkey => {
+                // var now = Math.floor( Date.now() / 1000 );
+                // var event = {
+                //     "content"    : "test note",
+                //     "created_at" : now,
+                //     "kind"       : 1,
+                //     "tags"       : [],
+                //     "pubkey"     : pubkey,
+                // }
+                // console.log()
+                // signAsynchronously(event).then(s => {
+                //     console.log(JSON.stringify(s))
+                // })
+                // // signWithNos2x(event).then(signed => {
+                // //     console.log(signed)
+                // // })
+                // console.log()
+            })
         })
 
     </script>
     <script>
-            document.addEventListener('DOMContentLoaded', () => {
 
+            document.addEventListener('DOMContentLoaded', () => {
             // Get all "navbar-burger" elements
             const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
@@ -221,8 +230,8 @@ var eventsToSubscribe = []
             subscription = JSON.stringify(subscription);
             sessionStorage.subscription = subscription;
             relaySocket.send(sessionStorage.subscription);
-            console.log(filter)
-            console.log(mindmachineSocket.readyState)
+            //console.log(filter)
+            //console.log(mindmachineSocket.readyState)
         }
     }
 
@@ -405,7 +414,7 @@ subscribed = false
         }
         if (event[2].kind === 649999) {
             j = JSON.parse(event[2].content)
-            console.log(j)
+            //console.log(j)
             currentStatus = j
             statusready = true
         }
@@ -450,50 +459,35 @@ subscribed = false
         }
     });
 
-
-    // Listen for messages
-    // relaySocket.addEventListener('message', function (e) {
-    //
-    //     var event = JSON.parse(e.data);
-    //     if (event[0] !== "EOSE") {
-    //         if (event[2].kind === 1) {
-    //             //console.log(event[2])
-    //             //document.body.innerHTML += event[ 2 ].content + " (sent publicly by " + event[ 2 ].pubkey + ")<br><br>";
-    //         } else if (event[2].kind === 126) {
-    //             // div = document.createElement("div")//createTextNode(`<div class="box">`+ event[ 2 ].content + `</div>`)
-    //             // div.innerHTML = `<div class="box">` + `<span class="tag is-primary">`+ event[ 2 ].tags[0][1]+ `</span>` + event[ 2 ].content + `</div>`;
-    //             event[2].tags.forEach(function (tags) {
-    //                 if (tags[0] === "mind") {
-    //                     switch (tags[1]) {
-    //                         case "protocol":
-    //                             enMapProtocolObject(event[2])
-    //                             break
-    //                         case "problems":
-    //                             enMapProblemObject(event[2])
-    //                     }
-    //                 }
-    //             })
-    //         }
-    //     }
-    // });
-
 </script>
 <script>
 
     async function sendEventToMindmachine(content, tags, kind, pubkey) {
             et = makeEvent(content, tags, kind, pubkey)
+        signAsynchronously(et).then(signed => {
+            var sendable = ["EVENT", signed];
+            sessionStorage.sendable = JSON.stringify(sendable);
+            mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
+            return signed
+        }).catch(err => {
+            console.log(err)
+        })
 
-            if (!window.nostr) {
-                console.log("no nostr")
-                return
-            }
-            if (window.nostr) {
-                signed = await signAsynchronously(et)
-                var sendable = ["EVENT", signed];
-                sessionStorage.sendable = JSON.stringify(sendable);
-                mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
-                return signed
-            }
+    }
+
+    async function mustSignEvent(event) {
+        if (!window.nostr) {
+            console.log("no nostr")
+            signed = window.NostrTools.signEvent(et, localStorage.getItem('privatekey'))
+            console.log(signed)
+        }
+        if (window.nostr) {
+            signed = await signAsynchronously(et)
+            var sendable = ["EVENT", signed];
+            sessionStorage.sendable = JSON.stringify(sendable);
+            mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
+            return signed
+        }
     }
 
     function makeNote(note, etag) {
