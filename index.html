@@ -53,41 +53,17 @@
 
     </script>
     <script>
+        let storedPubkey = ""
         waitForStatusReady(function () {
             getMuhPubkey().then(x => {
-                //disable sending to relays if you run this test:
-                //sendEventToMindmachine("test note", "", 1, x)
+                storedPubkey = x
             })
         })
-        // waitForEverythingReady(function () {
-        //     getMuhPubkey().then(x => {
-        //         testSignEvent()
-        //     })
-        // })
-        waitForNostr(function () {
-            getMuhPubkey().then(pubkey => {
-                // var now = Math.floor( Date.now() / 1000 );
-                // var event = {
-                //     "content"    : "test note",
-                //     "created_at" : now,
-                //     "kind"       : 1,
-                //     "tags"       : [],
-                //     "pubkey"     : pubkey,
-                // }
-                // console.log()
-                // signAsynchronously(event).then(s => {
-                //     console.log(JSON.stringify(s))
-                // })
-                // // signWithNos2x(event).then(signed => {
-                // //     console.log(signed)
-                // // })
-                // console.log()
-            })
-        })
-
     </script>
     <script>
-
+        function closeMenu() {
+            document.getElementById('navbarBasicExample').classList.toggle('is-active')
+        }
             document.addEventListener('DOMContentLoaded', () => {
             // Get all "navbar-burger" elements
             const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
@@ -95,6 +71,7 @@
             // Add a click event on each of them
             $navbarBurgers.forEach( el => {
             el.addEventListener('click', () => {
+                console.log()
 
                 // Get the target from the "data-target" attribute
                 const target = el.dataset.target;
@@ -136,19 +113,19 @@
                 <img src="Telegram_logo.svg.webp"  />
             </a>
 
-            <a class="navbar-item" onclick="displayUshTree()">
+            <a class="navbar-item" onclick="displayUshTree(); closeMenu();">
                 Identity Tree
             </a>
 
-            <a class="navbar-item" onclick="displaySamizdat()">
+            <a class="navbar-item" onclick="displaySamizdat(); closeMenu();">
                 Samizdatree
             </a>
 
-            <a class="navbar-item" onclick="displayProtocol();">
+            <a class="navbar-item" onclick="displayProtocol(); closeMenu();">
                 The Protocol
             </a>
 
-            <a class="navbar-item" onclick="displayProblemTracker()">
+            <a class="navbar-item" onclick="displayProblemTracker(); closeMenu();">
                 Problem Tracker
             </a>
 
@@ -158,25 +135,25 @@
                 </a>
 
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" onclick="displayStatus()">
+                    <a class="navbar-item" onclick="displayStatus(); closeMenu();">
                         Mindmachine Status
                     </a>
-                    <a class="navbar-item" onclick="displayPatches()">
+                    <a class="navbar-item" onclick="displayPatches(); closeMenu();">
                         Patch Chain
                     </a>
-                    <a class="navbar-item" onclick="displayDoki()">
+                    <a class="navbar-item" onclick="displayDoki(); closeMenu();">
                         Doki
                     </a>
-                    <a class="navbar-item" onclick="displayExpenses()">
+                    <a class="navbar-item" onclick="displayExpenses(); closeMenu();">
                         Expenses
                     </a>
-                    <a class="navbar-item" onclick="displayDividends()">
+                    <a class="navbar-item" onclick="displayDividends(); closeMenu();">
                         Dividends
                     </a>
-                    <a class="navbar-item" onclick="displayRankings()">
+                    <a class="navbar-item" onclick="displayRankings(); closeMenu();">
                         Nostranker
                     </a>
-                    <a class="navbar-item" onclick="displayNostr()">
+                    <a class="navbar-item" onclick="displayNostr(); closeMenu();">
                         WTF is Nostr?
                     </a>
                 </div>
@@ -184,14 +161,14 @@
         </div>
 
         <div class="navbar-end">
-            <a class="navbar-item" style="background-color: #FF9900; color: #ffffff" onclick="renderGettingStarted()">
+            <a class="navbar-item" style="background-color: #FF9900; color: #ffffff" onclick="renderGettingStarted(); closeMenu();">
                 Get Started Now
             </a>
-            <a class="navbar-item" onclick="displayAccount()">
+            <a class="navbar-item" onclick="displayAccount(); closeMenu();">
                 My Account
             </a>
 
-            <div class="block" onclick="displayStatus()">
+            <div class="block" onclick="displayStatus(); closeMenu();">
                 <p><span id="welay" class="block"></span></p>
             <p><progress class="progress is-small is-primary block" id="welayconnection" style="width: 90%; height: 4px">15%</progress></p>
             </div>
@@ -463,31 +440,19 @@ subscribed = false
 <script>
 
     async function sendEventToMindmachine(content, tags, kind, pubkey) {
+        let et
+        if (typeof pubkey !== "string") {
+            et = makeEvent(content, tags, kind, storedPubkey)
+        } else {
             et = makeEvent(content, tags, kind, pubkey)
-        signAsynchronously(et).then(signed => {
+        }
+        signed = await signAsynchronously(et).then(signed => {
             var sendable = ["EVENT", signed];
             sessionStorage.sendable = JSON.stringify(sendable);
             mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
-            return signed
         }).catch(err => {
             console.log(err)
         })
-
-    }
-
-    async function mustSignEvent(event) {
-        if (!window.nostr) {
-            console.log("no nostr")
-            signed = window.NostrTools.signEvent(et, localStorage.getItem('privatekey'))
-            console.log(signed)
-        }
-        if (window.nostr) {
-            signed = await signAsynchronously(et)
-            var sendable = ["EVENT", signed];
-            sessionStorage.sendable = JSON.stringify(sendable);
-            mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
-            return signed
-        }
     }
 
     function makeNote(note, etag) {

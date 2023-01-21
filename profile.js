@@ -53,7 +53,7 @@ function maintainerButton(Account) {
     btn = document.createElement("button")
     btn.innerText = "Promote to Maintainer"
     btn.onclick = function () {
-        if (!accountIsInMaintainerTree(pubKeyMinus2)) {
+        if (!accountIsInMaintainerTree(storedPubkey)) {
             alert("You must be in the Maintainer Tree to do this")
         } else {
             sendNewMaintainer(Account)
@@ -64,8 +64,8 @@ function maintainerButton(Account) {
 
 function sendNewMaintainer(targetAccount) {
     sequence = 0
-    if (identityObjects.get(pubKeyMinus2) !== undefined) {
-        sequence = identityObjects.get(pubKeyMinus2).Sequence
+    if (identityObjects.get(storedPubkey) !== undefined) {
+        sequence = identityObjects.get(storedPubkey).Sequence
     }
     sequence++
     content = JSON.stringify({
@@ -73,22 +73,17 @@ function sendNewMaintainer(targetAccount) {
         Maintainer: true,
         sequence: sequence
     })
-    p = makeEvent(content, "", 640402)
-    signHash(p.id).then(
-        function (result) {
-            p.sig = result
-            sendIt(p)
-            console.log(p)
-            location.reload()
-        }
-    )
+    sendEventToMindmachine(content, "", 640402).then(res => {
+        console.log(res)
+        location.reload()
+    })
 }
 
 function validateUSHButton(Account) {
     btn = document.createElement("button")
     btn.innerText = "Add to Identity Tree"
     btn.onclick = function () {
-        if (!accountIsInIdentityTree(pubKeyMinus2)) {
+        if (!accountIsInIdentityTree(storedPubkey)) {
             alert("You must be in the Identity Tree to add new people")
         } else {
             sendNewUshValidation(Account)
@@ -99,8 +94,8 @@ function validateUSHButton(Account) {
 
 function sendNewUshValidation(targetAccount) {
     sequence = 0
-    if (identityObjects.get(pubKeyMinus2) !== undefined) {
-        sequence = identityObjects.get(pubKeyMinus2).Sequence
+    if (identityObjects.get(storedPubkey) !== undefined) {
+        sequence = identityObjects.get(storedPubkey).Sequence
     }
     sequence++
     content = JSON.stringify({
@@ -108,15 +103,10 @@ function sendNewUshValidation(targetAccount) {
         USH: true,
         sequence: sequence
     })
-    p = makeEvent(content, "", 640402)
-    signHash(p.id).then(
-        function (result) {
-            p.sig = result
-            sendIt(p)
-            console.log(p)
-            location.reload()
-        }
-    )
+    sendEventToMindmachine(content, "", 640402).then(res => {
+        console.log(res)
+        location.reload()
+    })
 }
 
 function accountIsInIdentityTree(account) {
@@ -140,11 +130,11 @@ function accountIsInMaintainerTree(account) {
 }
 
 function myIdentity() {
-   ident = identityObjects.get(pubKeyMinus2)
+   ident = identityObjects.get(storedPubkey)
     if (ident !== undefined) {
         return ident
     } else {
-        console.log("the account " + pubKeyMinus2 + " has not been registered in the Mindmachine state.")
+        console.log("the account " + storedPubkey + " has not been registered in the Mindmachine state.")
         return false
     }
 }

@@ -73,7 +73,7 @@ function renderEditDoki(id) {
     saz = dokiObjects.get(id)
     ta.textContent = saz.CurrentTip
     ta.onfocus = function () {
-        if (!accountIsInIdentityTree(pubKeyMinus2)) {
+        if (!accountIsInIdentityTree(storedPubkey)) {
             alert("You must be in the Identity Tree to submit changes")
         }
     }
@@ -101,15 +101,10 @@ function makeAndSendKind641202(document_uid, patch, problem, sequence) {
         problem: problem,
         sequence: sequence+1
     })
-    p = makeEvent(content, "", 641202)
-    signHash(p.id).then(
-        function (result) {
-            p.sig = result
-            sendIt(p)
-            console.log(p)
-            location.reload()
-        }
-    )
+    sendEventToMindmachine(content, "", 641202).then(res => {
+        console.log(res)
+        location.reload()
+    })
 }
 
 function makePatch(original, modification) {
@@ -173,7 +168,7 @@ function renderOneDoki(id) {
                     mrg = document.createElement("button")
                     mrg.innerText = "Merge"
                     mrg.onclick = function () {
-                        if (!accountIsInMaintainerTree(pubKeyMinus2)) {
+                        if (!accountIsInMaintainerTree(storedPubkey)) {
                             alert("You must be in the Maintainer Tree to merge changes")
                         } else {
                             makeAndSendKind641204(id, patch.EventID, 2, saz.Sequence, "")
@@ -201,15 +196,10 @@ function makeAndSendKind641204(document_uid, patch_uid, operation, sequence, rea
         reason: reason,
         sequence: sequence+1
     })
-    p = makeEvent(content, "", 641204)
-    signHash(p.id).then(
-        function (result) {
-            p.sig = result
-            sendIt(p)
-            console.log(p)
-            location.reload()
-        }
-    )
+    sendEventToMindmachine(content, "", 641204).then(res => {
+        console.log(res)
+        location.reload()
+    })
 }
 
 function renderDokiNewDocumentForm() {
@@ -226,33 +216,23 @@ async function createNewPatch(document_id, patch, problem) {
         problem: problem,
         sequence: 1
     })
-    p = makeEvent(content, "", 641202)
-    signHash(p.id).then(
-        function (result) {
-            p.sig = result
-            sendIt(p)
-            console.log(p)
-            return p.id
-        }
-    )
+    sendEventToMindmachine(content, "", 641202).then(res => {
+        console.log(res)
+        location.reload()
+    })
 }
 
 async function createNewDocument(goal_or_problem) {
-    if (!accountIsInIdentityTree(pubKeyMinus2)) {
+    if (!accountIsInIdentityTree(storedPubkey)) {
         alert("You must be in the Identity Tree to do that")
     } else {
         content = JSON.stringify({
             goal_or_problem: goal_or_problem
         })
-        p = makeEvent(content, "", 641200)
-        signHash(p.id).then(
-            function (result) {
-                p.sig = result
-                sendIt(p)
-                console.log(p)
-                location.reload()
-            }
-        )
+        sendEventToMindmachine(content, "", 641200).then(res => {
+            console.log(res)
+            location.reload()
+        })
     }
 }
 
@@ -271,7 +251,7 @@ function dokiInABubble(doki) {
             edit.className = "button is-link"
             edit.innerText = "Edit this"
             edit.onclick = function () {
-                if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                if (!accountIsInIdentityTree(storedPubkey)) {
                     alert("You must be in the Identity Tree to submit edits")
                 }
                 setURLID("doki_id", doki)

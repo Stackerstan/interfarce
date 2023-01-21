@@ -24,7 +24,7 @@ function enMapIdentityObject(e) {
     c = JSON.parse(e.content)
     //console.log(c)
     identityObjects.set(c.Account, c)
-    //console.log(identityObjects.get(pubKeyMinus2).Sequence)
+    //console.log(identityObjects.get(storedPubkey).Sequence)
 }
 
 const protocolObjects = new Map();

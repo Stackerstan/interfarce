@@ -240,22 +240,8 @@ function setOpReturn(address, proof, pubkey) {
     sequence++
     let content = {"address": address, "proof": proof, sequence: sequence}
     let c = JSON.stringify(content)
-    let e = makeEvent(c, "", 640406)
-    if ( localStorage.getItem('usenos2x')!=='true'){    
-        signHash(e.id).then(
-            function (result) {
-            e.sig = result
-            sendIt(e)
-    },
-    function (error) {
-        console.log(error)
-    })}
-    else{
-        e = window.nostr.signEvent(e)
-        sendIt(e)
-    }
-    location.reload()
-
-    
-
+    sendEventToMindmachine(c, "", 640406, pubkey).then(res => {
+        console.log(res)
+        location.reload()
+    })
 }

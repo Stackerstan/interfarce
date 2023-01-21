@@ -23,7 +23,7 @@ function renderDoki(doki) {
             edit.className = "button is-link"
             edit.innerText = "Edit this"
             edit.onclick = function () {
-                if (!accountIsInIdentityTree(pubKeyMinus2)) {
+                if (!accountIsInIdentityTree(storedPubkey)) {
                     alert("You must be in the Identity Tree to submit edits")
                 }
                 setURLID("doki_id", doki)

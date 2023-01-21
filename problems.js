@@ -241,7 +241,7 @@ function showDetails(event) {
         claim_btn.innerText = "Claim this problem"
         claim_btn.className = "button is-primary"
         claim_btn.onclick = function () {
-            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+            if (!accountIsInIdentityTree(storedPubkey)) {
                 alert("You must be in the Identity Tree to do that")
             } else {
                 seq = Number(getSequence(event))
@@ -263,7 +263,7 @@ function showDetails(event) {
         newProblem = document.createElement("button")
         newProblem.className = "button is-link"
         newProblem.onclick = function () {
-            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+            if (!accountIsInIdentityTree(storedPubkey)) {
                 alert("You must be in the Identity Tree to do that")
             } else {
                 document.getElementById("details").appendChild(newProblemForm(event.mindmachineUID))
@@ -276,7 +276,7 @@ function showDetails(event) {
         editProblem = document.createElement("button")
         editProblem.className = "button is-link"
         editProblem.onclick = function () {
-            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+            if (!accountIsInIdentityTree(storedPubkey)) {
                 alert("You must be in the Identity Tree to do that")
             } else {
                 document.getElementById("details").appendChild(editProblemForm(event))
@@ -293,7 +293,7 @@ function showDetails(event) {
         newProtocol = document.createElement("button")
         newProtocol.className = "button is-link"
         newProtocol.onclick = function () {
-            if (!accountIsInIdentityTree(pubKeyMinus2)) {
+            if (!accountIsInIdentityTree(storedPubkey)) {
                 alert("You must be in the Identity Tree to do that")
             }
             document.getElementById("details").appendChild(newProtocolForm(event.mindmachineUID))
@@ -359,7 +359,7 @@ function createNewEdit(newTitle, newContent, item) {
                         ec.sig = result
                         sendIt(ec)
                         content = JSON.stringify({target: getMindmachineUID(item), sequence: Number(getSequence(item))+1, title: et.id, description: ec.id})
-                        if (identityObjects.get(pubKeyMinus2).GlobalSequence !== undefined) {
+                        if (identityObjects.get(storedPubkey).GlobalSequence !== undefined) {
                             p = makeEvent(content, "", 640802)
                             signHash(p.id).then(
                                 function (result) {
@@ -436,7 +436,7 @@ function sendNewProblem(titleID, descriptionID, parentID) {
     } else {
         content = JSON.stringify({title: titleID, description: descriptionID})
     }
-    if (identityObjects.get(pubKeyMinus2).GlobalSequence !== undefined) {
+    if (identityObjects.get(storedPubkey).GlobalSequence !== undefined) {
         p = makeEvent(content, "", 640800)
         signHash(p.id).then(
             function (result) {
