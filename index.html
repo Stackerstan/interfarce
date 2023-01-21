@@ -34,62 +34,61 @@
     <script src="nostr.js"></script>
     <script src="dividends.js"></script>
     <script src="connecting.js"></script>
+    <script src="keys.js"></script>
+    <script src="nostr.bundle.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css' />
+    <style type="text/css" >
+        body {
+            font-family : 'Ubuntu', sans-serif;
+        }
+    </style>
 
     <script>
-        function computeRawPrivkey(node) {
-            return bitcoinjs.ECPair.fromPrivateKey(node.privateKey, {network: bitcoinjs.networks.mainnet});
-        }
-    </script>
-    <script>
-        function getPrivkeyHex(backupwords) {
-            var seed = bip39.mnemonicToSeedSync(backupwords);
-            var node = bip32.fromSeed(seed);
-            var npath = `m/44'/1237'/0'/0/0`
-            var child = node.derivePath(npath);
-            return computeRawPrivkey(child);
-        }
-    </script>
-    <script>
-        function toHexString(byteArray) {
-            return Array.from(byteArray, function (byte) {
-                return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-            }).join('');
-        }
-    </script>
-    <script>
-        var pubKey = ""
-        if ((localStorage.getItem('backupwords') === null) && (localStorage.getItem('privatekey') === null)){
-            localStorage.setItem('backupwords', bip39.generateMnemonic())
-        }
-        if (localStorage.getItem('backupwords') !== null) {
-            var privKey = getPrivkeyHex(localStorage.getItem('backupwords'));
-            privKey = privKey.__D.toString('hex');
-            localStorage.setItem('privatekey', privKey)
-        }
-        if ((localStorage.getItem('privatekey') !== null) && (localStorage.getItem("usenos2x") !== 'true')) {
-            pubKey = nobleSecp256k1.getPublicKey(localStorage.getItem('privatekey'), true);
-        }
-
-    
-        // if (window.nostr) {
-
-        //   this.hasExtension = true
-        // }
-        
-
-        //be aware that not all valid bitcoin pubkeys are valid nostr pubkeys. Valid bitcoin pubkeys include uncompressed pubkeys (that start with 04), compressed pubkeys whose y coordinate is positive (that start with 02), and compressed pubkeys whose y coordinate is negative (that start with 03).
-        //Only the ones that start with 02 are valid for nostr, which then allows us to chop off the 02 when storing the pubkey.
-        //So if you change this code to generate random pubkeys, be sure to only use ones that have an 02 at the beginning.
-        //The pubkeyMinus2 variable is the pubkey created a moment ago but without the 02 at the beginning.
-        var pubKeyMinus2 = pubKey.substring(2);
-        pubkeydiv = document.createElement("div");
-        pubkeydiv.innerHTML = `You are currently using public key ` + pubKeyMinus2;
 
     </script>
     <script>
+
+    </script>
+    <script>
+
+    </script>
+    <script>
+        waitForStatusReady(function () {
+            getMuhPubkey().then(x => {
+                //disable sending to relays if you run this test:
+                //sendEventToMindmachine("test note", "", 1, x)
+            })
+        })
+        // waitForEverythingReady(function () {
+        //     getMuhPubkey().then(x => {
+        //         testSignEvent()
+        //     })
+        // })
+        waitForNostr(function () {
+            getMuhPubkey().then(pubkey => {
+                // var now = Math.floor( Date.now() / 1000 );
+                // var event = {
+                //     "content"    : "test note",
+                //     "created_at" : now,
+                //     "kind"       : 1,
+                //     "tags"       : [],
+                //     "pubkey"     : pubkey,
+                // }
+                // console.log()
+                // signAsynchronously(event).then(s => {
+                //     console.log(JSON.stringify(s))
+                // })
+                // // signWithNos2x(event).then(signed => {
+                // //     console.log(signed)
+                // // })
+                // console.log()
+            })
+        })
+
+    </script>
+    <script>
+
             document.addEventListener('DOMContentLoaded', () => {
-
             // Get all "navbar-burger" elements
             const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
@@ -211,50 +210,12 @@ displayWhileConnecting()
         return "http" === t.slice(0, 4) && (t = "ws" + t.slice(4)), "ws" !== t.slice(0, 2) && (t = "wss://" + t), t.length && "/" === t[t.length - 1] && (t = t.slice(0, -1)), [t, ...r].join("?")
     }
 
-    // var relay = "ws://192.168.100.214:1031"
-    var relay = "wss://mindmachine.688.org"
+    var relay = "ws://127.0.0.1:1031"//"wss://mindmachine.688.org"
     relay = normalizeRelayURL(relay);
     document.getElementById("welay").innerText = relay
-    var socket = new WebSocket(relay);
+    var mindmachineSocket = new WebSocket(relay);
     var relaySocket = new WebSocket(normalizeRelayURL("wss://nostr.688.org"));
 
-
-    // function subscribe( pubkey ) {
-    //   var filter = {
-    //           "authors": [
-    //                   pubkey
-    //           ]
-    //   };
-    //   var subscription = [ "REQ", "my-sub", filter ];
-    //   subscription = JSON.stringify( subscription );
-    //   sessionStorage.subscription = subscription;
-    //   socket.send( sessionStorage.subscription );
-    // }
-    // function fetchSingleEvent(event) {
-    //     if (event !== undefined) {
-    //         var filter = {
-    //             "ids": [event],
-    //         };
-    //         subscription = ["REQ", event, filter];
-    //         subscription = JSON.stringify(subscription);
-    //         sessionStorage.subscription = subscription;
-    //         relaySocket.send(sessionStorage.subscription);
-    //         console.log("subscribed to event " + event)
-    //         relaySocket.addEventListener('message', function (received) {
-    //             let parsed = JSON.parse(received.data);
-    //             if (parsed[0] !== "EOSE") {
-    //                 if (parsed[2].id === event) {
-    //                     enMapReply(event, parsed[2])
-    //                 }
-    //             }
-    //
-    //         })
-    //         subscription = ["CLOSE", event];
-    //         subscription = JSON.stringify(subscription);
-    //         sessionStorage.subscription = subscription;
-    //         relaySocket.send(sessionStorage.subscription);
-    //     }
-    // }
 var eventsToSubscribe = []
     function subscribeToComments(event) {
         if (event !== undefined) {
@@ -269,8 +230,8 @@ var eventsToSubscribe = []
             subscription = JSON.stringify(subscription);
             sessionStorage.subscription = subscription;
             relaySocket.send(sessionStorage.subscription);
-            console.log(filter)
-            console.log(socket.readyState)
+            //console.log(filter)
+            //console.log(mindmachineSocket.readyState)
         }
     }
 
@@ -284,7 +245,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to protocol events")
     }
 
@@ -298,7 +259,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to samizdat events")
     }
 
@@ -312,7 +273,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to identity events")
     }
 
@@ -326,7 +287,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "patches", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to patch events")
     }
 
@@ -340,7 +301,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to doki events")
     }
     function subscribeexpenses() {
@@ -353,7 +314,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to expenses events")
         }
 
@@ -367,7 +328,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to mindstate events")
     }
 
@@ -381,7 +342,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to mindmachine events")
     }
 
@@ -395,7 +356,7 @@ var eventsToSubscribe = []
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
-        socket.send(sessionStorage.subscription);
+        mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to problem events")
     }
     function subscribeexpenses() {
@@ -408,12 +369,12 @@ var eventsToSubscribe = []
     var subscription = ["REQ", "my-sub", filter];
     subscription = JSON.stringify(subscription);
     sessionStorage.subscription = subscription;
-    socket.send(sessionStorage.subscription);
+    mindmachineSocket.send(sessionStorage.subscription);
     console.log("subscribed to expenses events")
     }
 
 
-    socket.addEventListener('open', function () {
+    mindmachineSocket.addEventListener('open', function () {
         socketConnected = true
         subscribeToEverything()
     });
@@ -440,7 +401,7 @@ subscribed = false
     }
 
     // Listen for messages
-    socket.addEventListener('message', function (e) {
+    mindmachineSocket.addEventListener('message', function (e) {
 
         //console.log(e.data)
         var event = JSON.parse(e.data);
@@ -453,7 +414,7 @@ subscribed = false
         }
         if (event[2].kind === 649999) {
             j = JSON.parse(event[2].content)
-            console.log(j)
+            //console.log(j)
             currentStatus = j
             statusready = true
         }
@@ -498,35 +459,36 @@ subscribed = false
         }
     });
 
-
-    // Listen for messages
-    // relaySocket.addEventListener('message', function (e) {
-    //
-    //     var event = JSON.parse(e.data);
-    //     if (event[0] !== "EOSE") {
-    //         if (event[2].kind === 1) {
-    //             //console.log(event[2])
-    //             //document.body.innerHTML += event[ 2 ].content + " (sent publicly by " + event[ 2 ].pubkey + ")<br><br>";
-    //         } else if (event[2].kind === 126) {
-    //             // div = document.createElement("div")//createTextNode(`<div class="box">`+ event[ 2 ].content + `</div>`)
-    //             // div.innerHTML = `<div class="box">` + `<span class="tag is-primary">`+ event[ 2 ].tags[0][1]+ `</span>` + event[ 2 ].content + `</div>`;
-    //             event[2].tags.forEach(function (tags) {
-    //                 if (tags[0] === "mind") {
-    //                     switch (tags[1]) {
-    //                         case "protocol":
-    //                             enMapProtocolObject(event[2])
-    //                             break
-    //                         case "problems":
-    //                             enMapProblemObject(event[2])
-    //                     }
-    //                 }
-    //             })
-    //         }
-    //     }
-    // });
-
 </script>
 <script>
+
+    async function sendEventToMindmachine(content, tags, kind, pubkey) {
+            et = makeEvent(content, tags, kind, pubkey)
+        signAsynchronously(et).then(signed => {
+            var sendable = ["EVENT", signed];
+            sessionStorage.sendable = JSON.stringify(sendable);
+            mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
+            return signed
+        }).catch(err => {
+            console.log(err)
+        })
+
+    }
+
+    async function mustSignEvent(event) {
+        if (!window.nostr) {
+            console.log("no nostr")
+            signed = window.NostrTools.signEvent(et, localStorage.getItem('privatekey'))
+            console.log(signed)
+        }
+        if (window.nostr) {
+            signed = await signAsynchronously(et)
+            var sendable = ["EVENT", signed];
+            sessionStorage.sendable = JSON.stringify(sendable);
+            mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
+            return signed
+        }
+    }
 
     function makeNote(note, etag) {
         e = makeEvent(note, etag, 1)
@@ -548,10 +510,10 @@ subscribed = false
     function sendIt(signedEvent) {
         var sendable = ["EVENT", signedEvent];
         sessionStorage.sendable = JSON.stringify(sendable);
-        socket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
+        mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');
     }
 
-    function makeEvent(note, etag, kind) {
+    function makeEvent(note, etag, kind, pubkey) {
         var now = Math.floor((new Date().getTime()) / 1000);
         tags = []
         if (etag !== undefined) {
@@ -564,17 +526,15 @@ subscribed = false
                 }
             }
         }
-       // if (kind !== 1) {
-            if (identityObjects.get(pubKeyMinus2) !== undefined) {
+            if (identityObjects.get(pubkey) !== undefined) {
 
-                sequence = identityObjects.get(pubKeyMinus2).GlobalSequence + 1
+                sequence = identityObjects.get(pubkey).GlobalSequence + 1
                 tags.push(["sequence", sequence.toString()])
             } else {
 
                 sequence = 1
                 tags.push(["sequence", sequence.toString()])
             }
-        //}
         tags.push(["height", currentStatus.Height.toString()])
         k = 1
         if (kind !== undefined) {
@@ -582,7 +542,7 @@ subscribed = false
         }
         var newevent = [
             0,
-            pubKeyMinus2,
+            pubkey,
             now,
             k,
             tags,
@@ -592,7 +552,7 @@ subscribed = false
         var msghash = bitcoinjs.crypto.sha256(message).toString('hex');
         return {
             "id": msghash,
-            "pubkey": pubKeyMinus2,
+            "pubkey": pubkey,
             "created_at": now,
             "kind": k,
             "tags": tags,
@@ -600,9 +560,7 @@ subscribed = false
         }
     }
 
-    function signHash(hash) {
-        return nobleSecp256k1.schnorr.sign(hash, privKey)
-    }
+
 
 
 
