@@ -35,7 +35,7 @@ function replybox(id) {
     submitbtn.textContent = "Comment"
     submitbtn.className = "button is-primary"
     submitbtn.onclick = function () {
-        if (hasPermanym(pubKeyMinus2)) {
+        if (hasPermanym(storedPubkey)) {
             makeNote(textbox.value, id)
             textbox.value = ""
         } else {

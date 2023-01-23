@@ -8,20 +8,9 @@ function waitForNostr(callback) {
     }, 200);
 }
 
-// waitForNostr(function () {
-//     console.log()
-//     window.nostr.getPublicKey().then(k => {
-//         console.log(k)
-//         testSignEvent(k).then(signed => {
-//
-//             console.log(JSON.stringify(signed))
-//         })
-//     })
-// })
-
 async function getMuhPubkey() {
+    var pubKey = ""
     if (window.nostr) {
-        pubKey = ""
         return await window.nostr.getPublicKey()
     } else {
         if (pubKey.length > 0) {
@@ -31,8 +20,6 @@ async function getMuhPubkey() {
         }
     }
 }
-
-var pubKey = ""
 
 //generate a keypair, set private key and seed words in localstorage and return the pubkey
 function generateKeypair() {
@@ -52,9 +39,8 @@ function generateKeypair() {
     //be aware that not all valid bitcoin pubkeys are valid nostr pubkeys. Valid bitcoin pubkeys include uncompressed pubkeys (that start with 04), compressed pubkeys whose y coordinate is positive (that start with 02), and compressed pubkeys whose y coordinate is negative (that start with 03).
     //Only the ones that start with 02 are valid for nostr, which then allows us to chop off the 02 when storing the pubkey.
     //So if you change this code to generate random pubkeys, be sure to only use ones that have an 02 at the beginning.
-    //The pubkeyMinus2 variable is the pubkey created a moment ago but without the 02 at the beginning.
-    pubKey = pubKeyTemp.substring(2);
-    return pubKey
+    //The storedPubkey variable is the pubkey created a moment ago but without the 02 at the beginning.
+    return pubKeyTemp.substring(2)
 }
 
 function computeRawPrivkey(node) {

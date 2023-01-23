@@ -170,7 +170,7 @@ function newProtocolForm(parentID) {
     submitbtn.textContent = "Submit"
     submitbtn.className = "button is-primary"
     submitbtn.onclick = function () {
-        if (!accountIsInIdentityTree(pubKeyMinus2)) {
+        if (!accountIsInIdentityTree(storedPubkey)) {
             alert("You must be in the Identity Tree to do that")
         } else {
             createNewProtocolItem(problemID.value, protocolText.value, type.value, supersedes.value, nests.value, parentID)

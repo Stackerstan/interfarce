@@ -72,7 +72,7 @@ function renderPatch(patch) {
 }
 
 function sendMerge(content) {
-        if (identityObjects.get(pubKeyMinus2).GlobalSequence !== undefined) {
+        if (identityObjects.get(storedPubkey).GlobalSequence !== undefined) {
         p = makeEvent(content, "", 641004)
         signHash(p.id).then(
             function (result) {
@@ -154,7 +154,7 @@ function displayPatchTools() {
 //     content = name
 //     var newevent = [
 //         0,
-//         pubKeyMinus2,
+//         storedPubkey,
 //         now,
 //         641000,
 //         [],
@@ -171,13 +171,13 @@ function displayPatchTools() {
 //             nobleSecp256k1.schnorr.verify(
 //                 sig,
 //                 msghash,
-//                 pubKeyMinus2
+//                 storedPubkey
 //             ).then(
 //                 value => {
 //                     if ( value ) {
 //                         var fullevent = {
 //                             "id": msghash,
-//                             "pubkey": pubKeyMinus2,
+//                             "pubkey": storedPubkey,
 //                             "created_at": now,
 //                             "kind": 641000,
 //                             "tags": [],
@@ -246,8 +246,8 @@ async function addRepo(problemID, name) {
 //     //     }
 //     // }
 //     // if (kind !== 1) {
-//     //     if (identityObjects.get(pubKeyMinus2).Sequence !== undefined) {
-//     //         sequence = identityObjects.get(pubKeyMinus2).Sequence+1
+//     //     if (identityObjects.get(storedPubkey).Sequence !== undefined) {
+//     //         sequence = identityObjects.get(storedPubkey).Sequence+1
 //     //         tags.push(["sequence", sequence.toString()])
 //     //     }
 //     // }
