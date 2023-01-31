@@ -35,9 +35,14 @@ function getUnverified() {
     box = document.createElement("div")
     box.className = "content"
     identityObjects.forEach(function (ident) {
-        if (ident.UshBy.length === 0) {
-            box.appendChild(getIdentityLayout(ident))
+        if (typeof ident !== undefined) {
+            if (typeof ident.UshBy !== undefined) {
+                if (ident.UshBy.length === 0) {
+                    box.appendChild(getIdentityLayout(ident))
+                }
+            }
         }
+
     })
     return box
 }

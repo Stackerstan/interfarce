@@ -68,7 +68,7 @@ async function signAsynchronously(event) {
         console.log("no nostr")
         privateKey = localStorage.getItem('privatekey')
         if ((typeof privateKey) === "string") {
-            sig = window.NostrTools.signEvent(et, privateKey)
+            sig = window.NostrTools.signEvent(event, privateKey)
             event.sig = sig
             return event
         } else {

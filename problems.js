@@ -44,7 +44,6 @@ function renderProblems() {
     rootProblems.forEach(function (item) {
         div.appendChild(renderChildren(item))
     })
-    console.log(div,'222222222222222222222222222')
     return div
 }
 
