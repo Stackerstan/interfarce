@@ -217,7 +217,7 @@ displayWhileConnecting()
         return "http" === t.slice(0, 4) && (t = "ws" + t.slice(4)), "ws" !== t.slice(0, 2) && (t = "wss://" + t), t.length && "/" === t[t.length - 1] && (t = t.slice(0, -1)), [t, ...r].join("?")
     }
 
-    var relay = "ws://127.0.0.1:1031"//wss://mindmachine.688.org" //"ws://127.0.0.1:1031
+    var relay = "wss://mindmachine.688.org" //"ws://127.0.0.1:1031
     relay = normalizeRelayURL(relay);
     document.getElementById("welay").innerText = relay
     var mindmachineSocket = new WebSocket(relay);
