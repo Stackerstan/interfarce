@@ -13,6 +13,7 @@ async function getMuhPubkey() {
     if (window.nostr) {
         return await window.nostr.getPublicKey()
     } else {
+        console.log()
         if (pubKey.length > 0) {
             return pubKey
         } else {
@@ -23,6 +24,7 @@ async function getMuhPubkey() {
 
 //generate a keypair, set private key and seed words in localstorage and return the pubkey
 function generateKeypair() {
+    console.log(1)
     var pubKeyTemp = ""
     if ((localStorage.getItem('backupwords') === null) && (localStorage.getItem('privatekey') === null)){
         localStorage.setItem('backupwords', bip39.generateMnemonic())

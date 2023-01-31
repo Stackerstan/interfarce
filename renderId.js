@@ -8,6 +8,9 @@ function detect_id() {
     console.log(onloadLocation.hash)
     if (onloadLocation.hash !== undefined) {
         switch (onloadLocation.hash){
+            case "#nostr-event-kind-registry":
+                displayKinds()
+                return;
             case "#status":
                 displayStatus()
                 return;
@@ -99,6 +102,9 @@ function prepWindow(kind) {
 }
 
 function rewriteURL(page) {
+    getMuhPubkey().then(pubkey => {
+        storedPubkey = pubkey
+    })
     //setURLID(page, "")
     loc = window.location.href
     loc = loc.split("index.html")

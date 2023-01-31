@@ -35,7 +35,10 @@
     <script src="dividends.js"></script>
     <script src="connecting.js"></script>
     <script src="keys.js"></script>
+    <script src="kinds.js"></script>
     <script src="nostr.bundle.js"></script>
+    <script src="modal.js"></script>
+    <script src="kind0.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css' />
     <style type="text/css" >
         body {
@@ -56,9 +59,33 @@
         let storedPubkey = ""
         waitForStatusReady(function () {
             getMuhPubkey().then(x => {
+                console.log(x)
                 storedPubkey = x
+                subKind0Data(x)
+            })
+            waitForNostr(function () {
+                getMuhPubkey().then(x => {
+                    console.log(x)
+                    storedPubkey = x
+                    subKind0Data(x)
+                })
             })
         })
+        function subKind0Data(pubkey) {
+            var filter = {
+                "authors": [
+                    pubkey
+                ],
+                "kinds": [0]
+            };
+            var subscription = ["REQ", "my-sub", filter];
+            subscription = JSON.stringify(subscription);
+            console.log(subscription)
+            sessionStorage.subscription = subscription;
+            mindmachineSocket.send(sessionStorage.subscription);
+            console.log("subscribed to kind 0 for "+pubkey)
+        }
+
     </script>
     <script>
         function closeMenu() {
@@ -155,6 +182,9 @@
                     </a>
                     <a class="navbar-item" onclick="displayNostr(); closeMenu();">
                         WTF is Nostr?
+                    </a>
+                    <a class="navbar-item" onclick="displayKinds();closeMenu();">
+                        Nostr Event Kind Registry
                     </a>
                 </div>
             </div>
@@ -268,6 +298,20 @@ var eventsToSubscribe = []
         console.log("subscribed to patch events")
     }
 
+function subscribeeventbucket() {
+
+    var filter = {
+        "#eventer": [
+            "eventbucket"
+        ]
+    };
+    var subscription = ["REQ", "my-sub", filter];
+    subscription = JSON.stringify(subscription);
+    sessionStorage.subscription = subscription;
+    mindmachineSocket.send(sessionStorage.subscription);
+    console.log("subscribed to eventbucket events")
+}
+
     function subscribedoki() {
 
         var filter = {
@@ -281,18 +325,18 @@ var eventsToSubscribe = []
         mindmachineSocket.send(sessionStorage.subscription);
         console.log("subscribed to doki events")
     }
-    function subscribeexpenses() {
+    function subscribekinds() {
 
         var filter = {
             "#eventer": [
-                "expenses"
+                "kinds"
             ]
         };
         var subscription = ["REQ", "my-sub", filter];
         subscription = JSON.stringify(subscription);
         sessionStorage.subscription = subscription;
         mindmachineSocket.send(sessionStorage.subscription);
-        console.log("subscribed to expenses events")
+        console.log("subscribed to kind events")
         }
 
     function subscribeCurrentstate() {
@@ -374,6 +418,8 @@ subscribed = false
         detect_id()
         subscribeidentity()
         subscribeexpenses()
+        subscribeeventbucket()
+        subscribekinds()
     }
     }
 
@@ -383,6 +429,9 @@ subscribed = false
         //console.log(e.data)
         var event = JSON.parse(e.data);
         //console.log(event[2])
+        if (event[2].kind === 0) {
+            enMapKind0Object(event[2])
+        }
         if (event[2].kind === 640499) {
             enMapIdentityObject(event[2])
         }
@@ -399,6 +448,15 @@ subscribed = false
             downloadLatest(event[2].content)
         } else {
             switch (event[2].kind) {
+                case 641699:
+                    k = JSON.parse(event[2].content)
+                    enMapEventBucketObject(k)
+                    break;
+                case 641899:
+                    k = JSON.parse(event[2].content)
+                    enMapKindObject(k)
+                    console.log(k)
+                    break;
                 case 640699:
                     enMapProtocolObject(event[2])
                     break;
@@ -432,6 +490,12 @@ subscribed = false
                 case 641497:
                     samizdatReady = true
                     break;
+                case 641651:
+                    eventbucketReady = true
+                    break;
+                case 641851:
+                    kindReady = true
+                    break;
             }
         }
     });
@@ -446,7 +510,7 @@ subscribed = false
         } else {
             et = makeEvent(content, tags, kind, pubkey)
         }
-        signed = await signAsynchronously(et).then(signed => {
+        return await signAsynchronously(et).then(signed => {
             var sendable = ["EVENT", signed];
             sessionStorage.sendable = JSON.stringify(sendable);
             mindmachineSocket.send('["EVENT",' + JSON.stringify(JSON.parse(sessionStorage.sendable)[1]) + ']');

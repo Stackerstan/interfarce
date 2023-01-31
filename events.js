@@ -2,15 +2,6 @@ var currentStatus = 0
 
 const identityObjects = new Map();
 
-// function waitForEverythingReady(callback) {
-//     var interval = setInterval(function() {
-//         if (relaySocket) { //&& dokiReady && samizdatReady && protocolReady && problemsReady
-//             clearInterval(interval);
-//             callback();
-//         }
-//     }, 200);
-// }
-
 function waitForRelaySocketReady(callback) {
     var interval = setInterval(function() {
         if (relaySocket) {
@@ -19,6 +10,20 @@ function waitForRelaySocketReady(callback) {
         }
     }, 200);
 }
+
+const eventbucketObjects = new Map();
+
+function enMapEventBucketObject(e) {
+    eventbucketObjects.set(e.Kind, e.Count)
+}
+
+
+const kindObjects = new Map();
+
+function enMapKindObject(e) {
+    kindObjects.set(e.Kind, e)
+}
+
 function enMapIdentityObject(e) {
     //console.log(e.content)
     c = JSON.parse(e.content)
