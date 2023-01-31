@@ -1,5 +1,6 @@
 function displayAccount() {
     getMuhPubkey().then(pubkey => {
+        storedPubkey = pubkey
         document.getElementById("maincontent").replaceChildren(prepWindow())
         document.getElementById("heading").innerText = "Account Details (Currently logged in)"
         document.getElementById("content").replaceChildren(renderAccountDetails(pubkey))
@@ -90,20 +91,12 @@ function createElement(key, value) {
 
 function recoverSeed(pubkey) {
     if (!window.nostr) {
-        form = document.createElement("div")
+        div = document.createElement("div")
         ident = identityObjects.get(pubkey)
+        div.appendChild(makeH3("Import your existing account"))
+        div.appendChild(makeParagraph("If you previously created an account on Stackerstan you can import it here, but you **should** use a browser extension such as getAlby or Nos2x instead."))
+        form = document.createElement("div")
         form.innerHTML = `
-<h3 class="is-3">Import your existing account</h3>
-<div class="content">
-//todo: I can't get nos2x working cause I'm dumb
-<br /><br />
-Adding your seed words or private key here will replace the current keypair in your browser's LocalStorage for this site.
-<br /><br />
-<h4 class="is-4">Note for existing Nostr users</h4>
-Instead of importing your existing Nostr seed words or private key, you can simply register your <b>existing Nostr <i>username</i></b> as a Username for the pubkey you're currently signed in with (it was auto-generated when you first loaded this page). Don't forget to <b>Record your seed words</b>.
-<br /><br />
-You can then provide a proof (event signed with alby or nos2x AND your existing Stackerstan pubkey) to <b>add your Nostr pubkey to this Account</b>. Events from <b>both</b> pubkeys are then <b>valid for your Stackerstan Account</b> (not implemented, maybe coming soon?).
-</div>
 <div class="field">
   <label class="label">Seed Words OR Private Key</label>
   <div class="control">
@@ -120,7 +113,8 @@ You can then provide a proof (event signed with alby or nos2x AND your existing 
   </div>
 </div>
     `
-        return form
+        div.appendChild(form)
+        return div
     }
     return document.createElement("p")
 }
@@ -135,13 +129,44 @@ function restoreAccount(data) {
     location.reload()
 }
 
-function updateAccountDetails(pubkey) {
+function updateAccountDetails() {
     form = document.createElement("div")
-    //ident = identityObjects.get(pubkey)
+    form.appendChild(usernameAndBioForm())
+    form.appendChild(bioButtons(function () {
+        if (document.getElementById( 'name input' ).valueOf().readOnly) {
+            setBio( "", document.getElementById( 'about input' ).value, storedPubkey )
+            location.reload()
+        } else {
+            validateUnique(document.getElementById( 'name input' ).value).then(res => {
+                if (res) {
+                    setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, storedPubkey )
+                    location.reload()
+                } else {
+                    console.log()
+                    alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
+                }
+            })
+        }
+
+    }))
+return form
+}
+
+async function validateUnique(name) {
+    p = new Promise((resolve, reject) => {
+        identityObjects.forEach(function (v) {
+            if (v.Name === name) {
+                resolve(false)
+            }
+        })
+        resolve(true)
+    })
+    return p
+}
+
+function bioButtons(onclick) {
     submit = document.createElement("button")
-    submit.onclick = function () {
-        setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, pubkey )
-    }
+    submit.onclick = onclick
     submit.className = "button is-link"
     submit.innerText = "Submit"
     cancel = document.createElement("button")
@@ -149,7 +174,7 @@ function updateAccountDetails(pubkey) {
         document.getElementById('name input').value = '';document.getElementById('about input').value = '';
     }
     cancel.className = "button is-link is-light"
-    cancel.innerText = "Cancel"
+    cancel.innerText = "Clear"
 
     buttons = document.createElement("div")
     buttons.className = "field is-grouped"
@@ -162,46 +187,167 @@ function updateAccountDetails(pubkey) {
     control.appendChild(spacer())
     control.appendChild(cancel)
     buttons.appendChild(control)
-
-    form.innerHTML = `
-<h3 class="is-3">Modify your profile</h3>
-<div class="content">
-See "Non-fungible Identity" in the Stackerstan Superprotocolo.
-<br /><br />
-Usernames cannot be changed once set for your Pubkey. It MUST be unique within Stackerstan.
-<br /><br />
-The Superprotocolo requires a minimum Levenshtein distance between any new Username and all existing Usernames, but this is not implemented yet. 
-</div>
-    <div class="field">
-  <label class="label">Username</label>
-  <div class="control">
-    <input class="input" type="text" placeholder="Name or Pseudonym" id="name input" maxlength="20">
-  </div>
-</div>
-The About Me section of your Profile is a short bio that can be modified whenever you want, but every version is retained permanently and included in OP_RETURN states.
-<div class="field">
-  <label class="label">About Me</label>
-  <div class="control">
-    <textarea class="textarea" placeholder="About" id="about input" maxlength="560"></textarea>
-  </div>
-</div>
-<div> 
-    `
-    form.appendChild(buttons)
-return form
+    return buttons
 }
 
-function setBio(name, about, pubkey) {
-    sequence = 0
-    if (identityObjects.get(pubkey) !== undefined) {
-        sequence = identityObjects.get(pubkey).Sequence
+function usernameAndBioForm() {
+    div = document.createElement("div")
+    let username = ""
+    let about = ""
+    let haveExistingKind0 = false
+    if (kind0Objects.get(storedPubkey) !== undefined) {
+        if (kind0Objects.get(storedPubkey).name.length > 0) {
+            username = kind0Objects.get(storedPubkey).name
+            haveExistingKind0 = true
+        }
+        if (kind0Objects.get(storedPubkey).about.length > 0) {
+            about = kind0Objects.get(storedPubkey).about
+            haveExistingKind0 = true
+        }
     }
-    sequence++
-    content = JSON.stringify({name: name, about: about, sequence: sequence})
-    sendEventToMindmachine(content, "", 640400, pubkey).then(signed => {
-        console.log(JSON.stringify(signed))
-        location.reload()
+    div.appendChild(makeH3("Create or modify your Stackerstan profile"))
+    div.appendChild(makeParagraph("* Stackerstan usernames **cannot** be changed once set for your Pubkey   \n* Stackerstan usernames **must** be unique   \n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
+    if (haveExistingKind0) {
+        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(storedPubkey).name + "**_ now."))
+    }
+    div.appendChild(makeTextInput("Username", "Name or Pseudonym", "name input", 20, username))
+
+    div.appendChild(makeTextField("About Me", "Introduce yourself to the community", "about input", 560, about))
+    return div
+}
+
+function makeParagraph(markdown) {
+    d = document.createElement("div")
+    md = new showdown.Converter({
+        extensions: [...bindings]
     })
+    ht = md.makeHtml(markdown)
+    mdht = document.createElement("div")
+    mdht.innerHTML = ht
+    d.appendChild(mdht)
+    d.appendChild(document.createElement("br"))
+    return d
+}
+
+function makeLink(url, text) {
+    a = document.createElement("a")
+    a.href = url
+    a.innerText = text
+    return a
+}
+
+function makeH3(title) {
+    h3 = document.createElement("h3")
+    h3.className = "is-3"
+    h3.innerText = title
+    return h3
+}
+
+function makeTextField(label, placeholder, id, maxlength, existing) {
+    input = document.createElement("textarea")
+    input.className = "textarea"
+    if (existing.length > 0) {
+        input.value = existing
+    }
+    input.placeholder = placeholder
+    input.id = id
+    input.maxLength = maxlength
+    return makeFormField(label, input)
+}
+
+function makeTextInput(label, placeholder, id, maxlength, existing) {
+    d = document.createElement("div")
+    textInput = document.createElement("input")
+    d.appendChild(textInput)
+    textInput.className = "input"
+    textInput.type = "text"
+    if (existing.length > 0) {
+        textInput.value = existing
+    }
+    textInput.placeholder = placeholder
+    textInput.id = id
+    textInput.maxLength = maxlength
+
+    if (label === "Username") {
+        var userameIsAlreadySet = false
+        identityObjects.forEach(function (v) {
+            if (v.Account === storedPubkey) {
+                if (v.Name.length > 0) {
+                    textInput.value = v.Name
+                    textInput.readOnly = true
+                    userameIsAlreadySet = true
+                }
+            }
+        })
+        if (!userameIsAlreadySet) {
+            warn = document.createElement("p")
+            warn.style.display = "none"
+            identityObjects.forEach(function (v) {
+                if (v.Name === existing) {
+                    warn.style.display = "block"
+                }
+            })
+            warn.innerText = "username is taken!"
+            if (existing.length < 1) {
+                warn.innerText = "username is too short!"
+            }
+            warn.style.color = "#FF9900"
+
+            textInput.onkeyup = function () {
+                warn.style.display = "none"
+                if (textInput.value.length < 1) {
+                    warn.innerText = "username is too short!"
+                    warn.style.display = "block"
+                }
+                identityObjects.forEach(function (v) {
+                    if ((v.Name === textInput.value)&&(textInput.value.length > 0)) {
+                        warn.innerText = "username is taken!"
+                        warn.style.display = "block"
+                    }
+                })
+            }
+            d.appendChild(warn)
+        }
+    }
+    return makeFormField(label, d)
+}
+
+function makeFormField(label, input) {
+    if (label === "About") {
+        //todo populate from existing data if exists
+    }
+    field = document.createElement("div")
+    field.className = "field"
+    field.appendChild(makeLabel(label))
+    control = document.createElement("div")
+    control.className = "control"
+    control.appendChild(input)
+    field.appendChild(control)
+    return field
+}
+
+function makeLabel(name) {
+    label = document.createElement("label")
+    label.className = "label"
+    label.innerText = name
+    return label
+}
+
+
+function setBio(name, about, pubkey) {
+    if ((name.length > 0) || (about.length > 0)) {
+        sequence = 0
+        if (identityObjects.get(pubkey) !== undefined) {
+            sequence = identityObjects.get(pubkey).Sequence
+        }
+        sequence++
+        content = JSON.stringify({name: name, about: about, sequence: sequence})
+        sendEventToMindmachine(content, "", 640400, pubkey).then(x =>{
+            //if (reload) {location.reload()}
+        })
+    } else {
+        console.log("username and bio can't both be empty")
+    }
 }
 
 function opReturnForm() {
