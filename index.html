@@ -39,6 +39,7 @@
     <script src="nostr.bundle.js"></script>
     <script src="modal.js"></script>
     <script src="kind0.js"></script>
+    <script src="shares.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css' />
     <style type="text/css" >
         body {
@@ -56,6 +57,7 @@
 
     </script>
     <script>
+        prices()
         let storedPubkey = ""
         waitForStatusReady(function () {
             getMuhPubkey().then(x => {
@@ -256,6 +258,20 @@ var eventsToSubscribe = []
         console.log("subscribed to protocol events")
     }
 
+function subscribeshares() {
+
+    var filter = {
+        "#eventer": [
+            "shares"
+        ]
+    };
+    var subscription = ["REQ", "my-sub", filter];
+    subscription = JSON.stringify(subscription);
+    sessionStorage.subscription = subscription;
+    mindmachineSocket.send(sessionStorage.subscription);
+    console.log("subscribed to shares state")
+}
+
     function subscribesamizdat() {
 
         var filter = {
@@ -420,6 +436,7 @@ subscribed = false
         subscribeexpenses()
         subscribeeventbucket()
         subscribekinds()
+        subscribeshares()
     }
     }
 
@@ -448,6 +465,13 @@ subscribed = false
             downloadLatest(event[2].content)
         } else {
             switch (event[2].kind) {
+                case 640299:
+                    k = JSON.parse(event[2].content)
+                    for (p in k) {
+                        enMapShareObject(p, k[p])
+                    }
+                    logShareObjects()
+                    break;
                 case 641699:
                     k = JSON.parse(event[2].content)
                     enMapEventBucketObject(k)

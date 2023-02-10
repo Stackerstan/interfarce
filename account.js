@@ -309,6 +309,31 @@ function makeTextInput(label, placeholder, id, maxlength, existing) {
             d.appendChild(warn)
         }
     }
+
+    if (label === "Amount") {
+        warn = document.createElement("p")
+        warn.style.display = "none"
+        textInput.type = "number"
+        textInput.onkeyup = function () {
+            warn.style.display = "none"
+            int = parseInt(textInput.value, 10)
+            if (!int) {
+                warn.style.color = "#FF9900"
+                warn.innerText = "must be a number!"
+                warn.style.display = "block"
+            } else {
+                if (USD) {
+                    usdAmount = ((int/100000000)*USD).toFixed(2)
+                    warn.innerText = "Approximate amount in Cuckbucks:  $" + usdAmount
+                    warn.style.color = "#35be33"
+                    warn.style.display = "block"
+                } else {
+                    console.log("could not get USD")
+                }
+            }
+        }
+        d.appendChild(warn)
+    }
     return makeFormField(label, d)
 }
 
