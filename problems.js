@@ -185,7 +185,11 @@ function renderProblem(item,collapse=true) {
     // else{mdht.style.display='block'}
     if (collapse==true){mdht.innerHTML =extractedText}
     else{mdht.innerHTML =ht}
-    readmore=document.createElement("button")
+    readmore=document.createElement("div")
+    readmore.className="readmore"
+    // readmore=document.createElement("div")
+    
+    // readmore.className="Button ContentItem-more FEfUrdfMIKpQDJDqkjte Button--plain fEPKGkUK5jyc4fUuT0QP"
     readmore.innerText='Read more'
     readmore.id="readMoreBtn"+ item.mindmachineUID
 
@@ -193,7 +197,7 @@ function renderProblem(item,collapse=true) {
 
         var btnText = document.getElementById("readMoreBtn"+ item.mindmachineUID).innerText
 
-        console.log(document.getElementById(`childrenof` + item.mindmachineUID).children[1])
+        // console.log(document.getElementById(`childrenof` + item.mindmachineUID).children[1])
         if (btnText == 'Read more')
         {
             document.getElementById(`childrenof` + item.mindmachineUID).children[1].style.display='none'
