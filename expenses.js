@@ -247,7 +247,7 @@ function newExpenseForm() {
     div = document.createElement("div")
     div.appendChild(makeH3("Submit a new expense"))
     div.appendChild(makeParagraph("Participants who have contributed code to Stackerstan MAY claim an Expense."))
-    div.appendChild(makeTextInput("Link to merged commit", "A link to the commit you are claiming against", "pr input", 64, ""))
+    div.appendChild(makeTextInput("Link to merged commit", "A link to the commit you are claiming against", "pr input", 300, ""))
     div.appendChild(makeTextInput("Problem", "ID of problem from the Stackerstan Problem Tracker (optional for now)", "problem input", 64, ""))
     div.appendChild(makeTextInput("Commit Message", "The commit message from the Patch Chain or Github", "commit input", 80, ""))
     div.appendChild(makeTextInput("Hash of Merged Patch", "SHA256 digest of the diff that was merged (see instructions below)", "solution input", 64, "")) //todo validate unique
