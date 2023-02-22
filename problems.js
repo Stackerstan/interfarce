@@ -170,19 +170,56 @@ function renderProblem(item,collapse=true) {
     })
     //console.log(showdown.getDefaultOptions(md))
     ht = md.makeHtml(item.content)
-    mdht = document.createElement("div")
-    mdht.innerHTML = ht
-    mdht.className = "problem-body"
-    if (collapse==true){mdht.style.display='none'}
-    else{mdht.style.display='block'}
+    extractedText = ht.split(' ').slice(0,30).join(' ')
+    extractedText =extractedText.concat('...')
+    mdht1 = document.createElement("div")
+    mdht1.innerHTML =ht
+    mdht1.className = "problem-body1"
+    mdht1.style.display = 'none'
+
+    mdht2 = document.createElement("div")
+    mdht2.innerHTML =extractedText
+    mdht2.className = "problem-body2"
+    // mdht2.style.display = 'none'
+    // if (collapse==true){mdht.style.display='none'}
+    // else{mdht.style.display='block'}
+    if (collapse==true){mdht.innerHTML =extractedText}
+    else{mdht.innerHTML =ht}
+    readmore=document.createElement("div")
+    readmore.className="readmore"
+    // readmore=document.createElement("div")
+    
+    // readmore.className="Button ContentItem-more FEfUrdfMIKpQDJDqkjte Button--plain fEPKGkUK5jyc4fUuT0QP"
+    readmore.innerText='Read more'
+    readmore.id="readMoreBtn"+ item.mindmachineUID
+
+    readmore.onclick=function(){
+
+        var btnText = document.getElementById("readMoreBtn"+ item.mindmachineUID).innerText
+
+        // console.log(document.getElementById(`childrenof` + item.mindmachineUID).children[1])
+        if (btnText == 'Read more')
+        {
+            document.getElementById(`childrenof` + item.mindmachineUID).children[1].style.display='none'
+            document.getElementById(`childrenof` + item.mindmachineUID).firstChild.style.display='block'
+            document.getElementById("readMoreBtn"+ item.mindmachineUID).innerText='Read less'
+        }
+        else{
+            document.getElementById(`childrenof` + item.mindmachineUID).children[1].style.display='block'
+            document.getElementById(`childrenof` + item.mindmachineUID).firstChild.style.display='none'
+            document.getElementById("readMoreBtn"+ item.mindmachineUID).innerText='Read more'
+        }
+
+    }
     
     desc = document.createElement("div")
     desc.className = "message-body";
     desc.style.display='block'
-    desc.appendChild(mdht)
-    //desc.innerText = item.content//content
-    //desc.appendChild(document.createElement("br"))
-    //desc.appendChild(document.createElement("br"))
+    desc.appendChild(mdht1)
+    desc.appendChild(mdht2)
+    if (collapse==true){desc.appendChild(readmore)}
+
+    
     if (item.kind === 640899) {
         var claimed_by = document.createElement("div");
         claimedby = getClaimedBy(item)
@@ -205,20 +242,6 @@ function renderProblem(item,collapse=true) {
 
     head.onclick = function () {
         showDetails(item)
-
-        if(document.getElementById(`childrenof` + item.mindmachineUID).firstChild.style.display=='block'){
-                 
-                    document.getElementById(`childrenof` + item.mindmachineUID).firstChild.style.display='none'
-                  
-                      
-        } else {
-            document.getElementById(`childrenof` + item.mindmachineUID).firstElementChild.style.display='block'
-        }
-
-        
-      
-
-        
       
     }
     desc_ = document.createElement("div")
@@ -226,10 +249,7 @@ function renderProblem(item,collapse=true) {
     article.appendChild(desc)
     return article
 }
-function collapseProblem(article){
 
-
-}
 
 function showDetails(event) {
     document.getElementById("details").replaceChildren()
