@@ -416,3 +416,4 @@ function setOpReturn(address, proof, pubkey) {
         location.reload()
     })
 }
+
