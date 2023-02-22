@@ -19,9 +19,8 @@ function renderDoki(doki) {
             mdht = document.createElement("div")
             mdht.innerHTML = ht
             mdht.className = "content"
-            edit = document.createElement("button")
-            edit.className = "button is-link"
-            edit.innerText = "Edit this"
+            edit = document.createElement("a")
+            edit.innerText = "EDIT"
             edit.onclick = function () {
                 if (!accountIsInIdentityTree(storedPubkey)) {
                     alert("You must be in the Identity Tree to submit edits")
