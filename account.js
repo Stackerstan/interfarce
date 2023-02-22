@@ -35,6 +35,7 @@ function hasPermanym(pubkey) {
 }
 
 function renderAccountDetails(pubkey) {
+    // console.log("redering")
     deets = document.createElement("div")
     deets.className = "content"
     let ident;
@@ -59,20 +60,55 @@ function renderAccountDetails(pubkey) {
     } else {
         ushby = "No one has validated that you are human yet. Post a message in the Samizdat tree to ask."
     }
+    if (sharesObjects.get(pubkey) !== undefined){
+        LeadTimeLockedShares=sharesObjects.get(pubkey).LeadTimeLockedShares
+        LeadTime=sharesObjects.get(pubkey).LeadTime
+        LeadTimeUnlockedShares =  sharesObjects.get(pubkey).LeadTimeUnlockedShares
+        approvedExpensesnum = approvedExpenses(sharesObjects.get(pubkey).Expenses)
+        filedExpenses =  sharesObjects.get(pubkey).Expenses.length
+        // console.log(approvedExpenses)
+    }
+    else{
+        LeadTimeLockedShares=0
+        LeadTime=0
+        LeadTimeUnlockedShares =  0
+        approvedExpensesnum = 0
+        filedExpenses =0
+    }
+
     deets.appendChild(createElement("Added to the Participant Tree by:", ushby))
     deets.appendChild(createElement("Vouched for by", "no one has vouched for you yet"))
-    deets.appendChild(createElement("Total Shares", "0"))
-    deets.appendChild(createElement("Lead Time", "0"))
-    deets.appendChild(createElement("Lead Time Unlocked Shares", "0"))
-    deets.appendChild(createElement("Lead Time Locked Shares", "0"))
-    deets.appendChild(createElement("Voting Power", "0"))
+    deets.appendChild(createElement("Total Shares", LeadTimeUnlockedShares+LeadTimeLockedShares))
+    deets.appendChild(createElement("Lead Time", LeadTime))
+    deets.appendChild(createElement("Lead Time Unlocked Shares", LeadTimeLockedShares))
+    deets.appendChild(createElement("Lead Time Locked Shares", LeadTimeUnlockedShares))
+    deets.appendChild(createElement("Voting Power", LeadTime*LeadTimeLockedShares))
     deets.appendChild(createElement("Maintainer", "false"))
     deets.appendChild(createElement("Problems Logged", "0"))
     deets.appendChild(createElement("Problems Claimed", "0"))
     deets.appendChild(createElement("Problems Solved", "0"))
-    deets.appendChild(createElement("Expenses Filed", "0"))
-    deets.appendChild(createElement("Expenses Approved", "0"))
+    deets.appendChild(createElement("Expenses Filed", filedExpenses))
+    deets.appendChild(createElement("Expenses Approved", approvedExpensesnum))
     return deets
+}
+// {
+//     "LeadTimeLockedShares": 1,
+//     "LeadTime": 1,
+//     "LastLtChange": 761151,
+//     "Expenses": null,
+//     "LeadTimeUnlockedShares": 0,
+//     "OpReturnAddresses": null,
+//     "Sequence": 5
+// }
+function approvedExpenses(expensesObject){
+    var num=0
+    expensesObject.forEach(function(v){
+        if (v.Approved==true){  num++}
+      
+    })
+
+    // sharesObjects.get("cc8d072efdcc676fcbac14f6cd6825edc3576e55eb786a2a975ee034a6a026cb").Expenses.length
+    return num
 }
 
 function createElement(key, value) {
