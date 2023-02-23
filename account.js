@@ -60,7 +60,7 @@ function renderAccountDetails(pubkey) {
     } else {
         ushby = "No one has validated that you are human yet. Post a message in the Samizdat tree to ask."
     }
-    if (sharesObjects.get(pubkey) !== undefined){
+    if (sharesObjects.get(pubkey)){
         LeadTimeLockedShares=sharesObjects.get(pubkey).LeadTimeLockedShares
         LeadTime=sharesObjects.get(pubkey).LeadTime
         LeadTimeUnlockedShares =  sharesObjects.get(pubkey).LeadTimeUnlockedShares
@@ -91,23 +91,14 @@ function renderAccountDetails(pubkey) {
     deets.appendChild(createElement("Expenses Approved", approvedExpensesnum))
     return deets
 }
-// {
-//     "LeadTimeLockedShares": 1,
-//     "LeadTime": 1,
-//     "LastLtChange": 761151,
-//     "Expenses": null,
-//     "LeadTimeUnlockedShares": 0,
-//     "OpReturnAddresses": null,
-//     "Sequence": 5
-// }
-function approvedExpenses(expensesObject){
-    var num=0
-    expensesObject.forEach(function(v){
-        if (v.Approved==true){  num++}
-      
-    })
 
-    // sharesObjects.get("cc8d072efdcc676fcbac14f6cd6825edc3576e55eb786a2a975ee034a6a026cb").Expenses.length
+function approvedExpenses(expensesObject){
+    let num = 0
+    if (expensesObject) {
+        expensesObject.forEach(function(v){
+            if (v.Approved === true){  num++}
+        })
+    }
     return num
 }
 
