@@ -60,30 +60,26 @@ function renderAccountDetails(pubkey) {
     } else {
         ushby = "No one has validated that you are human yet. Post a message in the Samizdat tree to ask."
     }
+    LeadTimeLockedShares = 0
+    LeadTime = 0
+    LeadTimeUnlockedShares =  0
+    approvedExpensesnum = 0
+    filedExpenses = 0
     if (sharesObjects.get(pubkey)){
-        LeadTimeLockedShares=sharesObjects.get(pubkey).LeadTimeLockedShares
-        LeadTime=sharesObjects.get(pubkey).LeadTime
-        LeadTimeUnlockedShares =  sharesObjects.get(pubkey).LeadTimeUnlockedShares
+        sharesObjects.get(pubkey).LeadTimeLockedShares ? LeadTimeLockedShares = sharesObjects.get(pubkey).LeadTimeLockedShares : 0 ;
+        sharesObjects.get(pubkey).LeadTime ? LeadTime = sharesObjects.get(pubkey).LeadTime : 0 ;
+        sharesObjects.get(pubkey).LeadTimeUnlockedShares ? LeadTimeUnlockedShares = sharesObjects.get(pubkey).LeadTimeUnlockedShares : 0 ;
         approvedExpensesnum = approvedExpenses(sharesObjects.get(pubkey).Expenses)
-        filedExpenses =  sharesObjects.get(pubkey).Expenses.length
-        // console.log(approvedExpenses)
+        sharesObjects.get(pubkey).Expenses ? filedExpenses = sharesObjects.get(pubkey).Expenses.length : 0 ;
     }
-    else{
-        LeadTimeLockedShares=0
-        LeadTime=0
-        LeadTimeUnlockedShares =  0
-        approvedExpensesnum = 0
-        filedExpenses =0
-    }
-
     deets.appendChild(createElement("Added to the Participant Tree by:", ushby))
     deets.appendChild(createElement("Vouched for by", "no one has vouched for you yet"))
     deets.appendChild(createElement("Total Shares", LeadTimeUnlockedShares+LeadTimeLockedShares))
     deets.appendChild(createElement("Lead Time", LeadTime))
-    deets.appendChild(createElement("Lead Time Unlocked Shares", LeadTimeLockedShares))
-    deets.appendChild(createElement("Lead Time Locked Shares", LeadTimeUnlockedShares))
+    deets.appendChild(createElement("Lead Time Unlocked Shares", LeadTimeUnlockedShares))
+    deets.appendChild(createElement("Lead Time Locked Shares", LeadTimeLockedShares))
     deets.appendChild(createElement("Voting Power", LeadTime*LeadTimeLockedShares))
-    deets.appendChild(createElement("Maintainer", "false"))
+    deets.appendChild(createElement("Maintainer", accountIsInMaintainerTree(pubkey)))
     deets.appendChild(createElement("Problems Logged", "0"))
     deets.appendChild(createElement("Problems Claimed", "0"))
     deets.appendChild(createElement("Problems Solved", "0"))
