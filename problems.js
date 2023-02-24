@@ -169,22 +169,27 @@ function renderProblem(item,collapse=true) {
         extensions: [...bindings]
     })
     //console.log(showdown.getDefaultOptions(md))
-    ht = md.makeHtml(item.content)
-    extractedText = ht.split(' ').slice(0,30).join(' ')
-    extractedText =extractedText.concat('...')
+    
+    
+    content1 = item.content.split(' ').slice(0,30).join(' ')
+    content1 =content1.concat('...')
+    content2 = item.content
+    ht1 = md.makeHtml(content1)
+    ht2 = md.makeHtml(content2)
+
     mdht1 = document.createElement("div")
-    mdht1.innerHTML =ht
+    mdht1.innerHTML =ht2
     mdht1.className = "problem-body1"
     mdht1.style.display = 'none'
 
-    mdht2 = document.createElement("div")
-    mdht2.innerHTML =extractedText
-    mdht2.className = "problem-body2"
-    // mdht2.style.display = 'none'
-    // if (collapse==true){mdht.style.display='none'}
-    // else{mdht.style.display='block'}
-    if (collapse==true){mdht.innerHTML =extractedText}
-    else{mdht.innerHTML =ht}
+    mdht3 = document.createElement("div")
+    mdht3.innerHTML =ht1
+    mdht3.className = "problem-body2"
+
+    if (collapse==true){mdht1.innerHTML =ht2}
+    else{
+        mdht1.style.display = 'block'
+        mdht3.style.display = 'none'}
     readmore=document.createElement("div")
     readmore.className="readmore"
     // readmore=document.createElement("div")
@@ -216,7 +221,7 @@ function renderProblem(item,collapse=true) {
     desc.className = "message-body";
     desc.style.display='block'
     desc.appendChild(mdht1)
-    desc.appendChild(mdht2)
+    desc.appendChild(mdht3)
     if (collapse==true){desc.appendChild(readmore)}
 
     
