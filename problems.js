@@ -172,7 +172,7 @@ function renderProblem(item,collapse=true) {
     
     
     contentPreview = item.content.split(' ').slice(0,30).join(' ')
-    contentPreview =content1.concat('...')
+    contentPreview =contentPreview.concat('...')
     contentAll = item.content
     ht1 = md.makeHtml(contentAll)
     ht2 = md.makeHtml(contentPreview)
@@ -187,7 +187,7 @@ function renderProblem(item,collapse=true) {
     mdht3.innerHTML =ht2
     mdht3.className = "problem-body2"
 
-    if (collapse==true){mdht1.innerHTML =ht2}
+    if (collapse==true){mdht1.innerHTML =ht1}
     else{
         mdht1.style.display = 'block'
         mdht3.style.display = 'none'}
