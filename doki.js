@@ -238,8 +238,10 @@ async function createNewDocument(goal_or_problem) {
 
 
 function dokiInABubble(doki) {
-        saz = dokiObjects.get(doki)
-        if (saz !== undefined) {
+        let saz = dokiObjects.get(doki)
+    let box = document.createElement("div")
+    box.className = "notification is-primary"
+        if (saz) {
             md = new showdown.Converter({
                 extensions: [...bindings]
             })
@@ -256,11 +258,10 @@ function dokiInABubble(doki) {
                 }
                 setURLID("doki_id", doki)
             }
-            box = document.createElement("div")
-            box.className = "notification is-primary"
+
             box.appendChild(mdht)
             box.appendChild(edit)
-            return box
+
         }
-        return
+    return box
 }
