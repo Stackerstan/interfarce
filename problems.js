@@ -171,19 +171,20 @@ function renderProblem(item,collapse=true) {
     //console.log(showdown.getDefaultOptions(md))
     
     
-    content1 = item.content.split(' ').slice(0,30).join(' ')
-    content1 =content1.concat('...')
-    content2 = item.content
-    ht1 = md.makeHtml(content1)
-    ht2 = md.makeHtml(content2)
+    contentPreview = item.content.split(' ').slice(0,30).join(' ')
+    contentPreview =content1.concat('...')
+    contentAll = item.content
+    ht1 = md.makeHtml(contentAll)
+    ht2 = md.makeHtml(contentPreview)
+ 
 
     mdht1 = document.createElement("div")
-    mdht1.innerHTML =ht2
+    mdht1.innerHTML =ht1
     mdht1.className = "problem-body1"
     mdht1.style.display = 'none'
 
     mdht3 = document.createElement("div")
-    mdht3.innerHTML =ht1
+    mdht3.innerHTML =ht2
     mdht3.className = "problem-body2"
 
     if (collapse==true){mdht1.innerHTML =ht2}
