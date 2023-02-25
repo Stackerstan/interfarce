@@ -4,7 +4,7 @@ function displayAccount() {
         document.getElementById("maincontent").replaceChildren(prepWindow())
         document.getElementById("heading").innerText = "Account Details (Currently logged in)"
         document.getElementById("content").replaceChildren(renderAccountDetails(pubkey))
-        document.getElementById("details").replaceChildren(updateAccountDetails(pubkey), document.createElement("br"), recoverSeed(pubkey), document.createElement("br"),  opReturnForm(pubkey))
+        document.getElementById("details").replaceChildren(updateAccountDetails(pubkey), document.createElement("br"), recoverSeed(pubkey))
     })
 }
 
