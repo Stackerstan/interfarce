@@ -57,7 +57,8 @@ function detect_id() {
         return
     }
 
-    renderHome()
+    //renderHome()
+    displayStatus()
 }
 
 function prepWindow(kind) {

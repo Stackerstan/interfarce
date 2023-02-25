@@ -101,14 +101,18 @@ function approvedExpenses(expensesObject){
 function createElement(key, value) {
     box = document.createElement("div")
     box.className = "box"
-    k = document.createElement("strong")
-    k.innerText = key
-    v = document.createElement("p")
-    v.innerText = value
-    b = document.createElement("br")
-    box.appendChild(k)
-    box.appendChild(b)
-    box.appendChild(v)
+    if (key) {
+        k = document.createElement("strong")
+        k.innerText = key
+        box.appendChild(k)
+        box.appendChild(document.createElement("br"))
+    }
+    if (value) {
+        v = document.createElement("p")
+        v.innerText = value
+        box.appendChild(v)
+    }
+
     return box
 }
 
