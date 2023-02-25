@@ -162,12 +162,12 @@ function updateAccountDetails() {
     form.appendChild(bioButtons(function () {
         if (document.getElementById( 'name input' ).valueOf().readOnly) {
             setBio( "", document.getElementById( 'about input' ).value, storedPubkey )
-            location.reload()
+            //location.reload()
         } else {
             validateUnique(document.getElementById( 'name input' ).value).then(res => {
                 if (res) {
                     setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, storedPubkey )
-                    location.reload()
+                    //location.reload()
                 } else {
                     console.log()
                     alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
@@ -395,6 +395,7 @@ function setBio(name, about, pubkey) {
         sequence++
         content = JSON.stringify({name: name, about: about, sequence: sequence})
         sendEventToMindmachine(content, "", 640400, pubkey).then(x =>{
+            location.reload()
             //if (reload) {location.reload()}
         })
     } else {
