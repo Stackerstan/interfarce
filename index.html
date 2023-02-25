@@ -439,11 +439,83 @@ subscribed = false
         //console.log(e.data)
         var event = JSON.parse(e.data);
         //console.log(event[2])
-        if (event[2].kind === 0) {
-            enMapKind0Object(event[2])
-        }
-        if (event[2].kind === 640499) {
-            enMapIdentityObject(event[2])
+        if (event[2]) {
+            if (event[2].kind === 0) {
+                enMapKind0Object(event[2])
+            }
+            if (event[2].kind === 640499) {
+                enMapIdentityObject(event[2])
+            }
+            if (event[2].kind === 641097) {
+                enMapPatch(event[2])
+            }
+            if (event[2].kind === 649999) {
+                j = JSON.parse(event[2].content)
+                //console.log(j)
+                currentStatus = j
+                statusready = true
+            }
+            if (event[2].kind === 641099) {
+                downloadLatest(event[2].content)
+            } else {
+                switch (event[2].kind) {
+                    case 640299:
+                        k = JSON.parse(event[2].content)
+                        for (p in k) {
+                            enMapShareObject(p, k[p])
+                        }
+                        logShareObjects()
+                        break;
+                    case 641699:
+                        k = JSON.parse(event[2].content)
+                        enMapEventBucketObject(k)
+                        break;
+                    case 641899:
+                        k = JSON.parse(event[2].content)
+                        enMapKindObject(k)
+                        console.log(k)
+                        break;
+                    case 640699:
+                        enMapProtocolObject(event[2])
+                        break;
+                    case 640899:
+                        enMapProblemObject(event[2])
+                        break;
+                    case 641299:
+                        enMapDokiObject(event[2])
+                        break;
+                    case 1:
+                        event[2].tags.forEach(function (tagArray) {
+                            if (tagArray[0] === "e") {
+                                if (tagArray[1] === rootSamizdatId) {
+                                    enMapSamizdat(event[2])
+                                }
+                            }
+                        })
+                        if (event[2].id === rootSamizdatId) {
+                            enMapSamizdat(event[2])
+                        }
+                        break;
+                    case 641297:
+                        dokiReady = true
+                        break;
+                    case 640697:
+                        protocolReady = true
+                        break;
+                    case 640897:
+                        problemsReady = true
+                        break;
+                    case 641497:
+                        samizdatReady = true
+                        break;
+                    case 641651:
+                        eventbucketReady = true
+                        break;
+                    case 641851:
+                        kindReady = true
+                        break;
+                }
+            }
         }
         if (event[2].kind === 641097) {
             enMapPatch(event[2])
