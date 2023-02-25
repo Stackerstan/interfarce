@@ -2,12 +2,13 @@ function displayStatus() {
     document.getElementById("maincontent").replaceChildren(prepWindow())
     document.getElementById("heading").innerText = "Current Mindmachine Status"
     document.getElementById("content").replaceChildren(loadingSign())
-    waitForStatusReady(function () {
-        rewriteURL("home")
-        document.getElementById("content").replaceChildren(renderStatus())
-        document.getElementById("details").append(renderDoki("cb399f1ec1302f607d683c31a4928bb3ffbf22a68ba3a3a3db96bfc9038db3cb"), renderDoki("9827d8ede1572958ef01b67aee20618be038af2976b9aee0b175c3624e93b997"))
+    waitForDokiReady(function () {
+        waitForStatusReady(function () {
+            rewriteURL("home")
+            document.getElementById("content").replaceChildren(renderStatus())
+            document.getElementById("details").append(renderDoki("cb399f1ec1302f607d683c31a4928bb3ffbf22a68ba3a3a3db96bfc9038db3cb"), renderDoki("9827d8ede1572958ef01b67aee20618be038af2976b9aee0b175c3624e93b997"))
+        })
     })
-
 }
 
 var statusready = false
