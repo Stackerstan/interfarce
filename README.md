@@ -13,7 +13,7 @@ Simply edit index.html and replace `wss://mindmachine.688.org` with `ws://127.0.
 If you are running the mindmachine on Windows using WSL2:
 
 0. Change config.yaml. Set websocketaddr to `0.0.0.0:1031` (originally `127.0.0.1:1031`)
-1. Run`ip a |grep "global eth0` and you will get `inet xxx.xxx.xxx.xxx/20 brd aaa.aaa.aaa.aaa scope global eth0`
+1. Run`ip a |grep "global eth0“` and you will get `inet xxx.xxx.xxx.xxx/20 brd aaa.aaa.aaa.aaa scope global eth0`
 2. Edit index.html, replace `wss://mindmachine.688.org` with `ws://xxx.xxx.xxx.xxx:1031`
 3. Open index.html
 ### Contributing
