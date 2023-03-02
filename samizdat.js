@@ -10,6 +10,16 @@ function waitForSamizdatReady(callback) {
         }
     }, 200);
 }
+let identityReady = false
+function waitForIdentityReady(callback) {
+    var interval = setInterval(function() {
+        if (identityReady) {
+            clearInterval(interval);
+            callback();
+        }
+    }, 200);
+}
+
 
 function displaySamizdat() {
     document.getElementById("maincontent").replaceChildren(prepWindow())
@@ -17,9 +27,12 @@ function displaySamizdat() {
     document.getElementById("heading").appendChild(spacer())
     document.getElementById("content").replaceChildren(loadingSign())
     waitForSamizdatReady(function () {
-        getMuhPubkey().then(pubkey => {
-            document.getElementById("heading").appendChild(helpButton("58b02c07e1971ad9178293e0c0d39509a715db35ba3a989ed97d25c6f8e9ad07", pubkey))
-            renderSamizdat(pubkey)
+        waitForIdentityReady(function () {
+            getMuhPubkey().then(pubkey => {
+                document.getElementById("heading").appendChild(helpButton("58b02c07e1971ad9178293e0c0d39509a715db35ba3a989ed97d25c6f8e9ad07", pubkey))
+                renderSamizdat(pubkey)
+                }
+            )
         })
     })
     rewriteURL("samizdat")
